@@ -30,7 +30,7 @@ def fetch_hourly_weather_data(location_id = "350731"):
                 hour_data = {
                     "date": date,
                     "hour": f"{hour:02d}:00",  # Formatting the hour
-                    "temperature": rep['T'],
+                    "temperature": float(rep['T']),
                     "humidity": rep['H'],
                     "weatherType": rep['W'],  # Assuming this is the weather type
                 }
