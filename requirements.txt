@@ -1,0 +1,2 @@
+Flask         # The Flask web framework
+Jinja2        # Template engine used by Flask

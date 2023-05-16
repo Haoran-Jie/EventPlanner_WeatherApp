@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Weather App - Cambridge</title>
+    <style>
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(45deg, #85FFBD, #FFFB7D, #FF85E5);
+            background-size: 200% 200%;
+            animation: gradient 5s ease infinite;
+            font-family: Arial, sans-serif;
+        }
+
+        .header {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .weather-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 10px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            transition: transform .2s;
+        }
+
+        .weather-card:hover {
+            transform: scale(1.05);
+        }
+
+        #weather-container {
+            display: flex;
+            overflow-x: auto;
+        }
+
+        .weather-card h2, 
+        .weather-card h3,
+        .weather-card p {
+            margin-bottom: 10px;
+        }
+
+        .weather-card i {
+            font-size: 24px;
+        }
+
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+</head>
+<body>
+    <h1 class="header">Weather in Cambridge</h1>
+    <div id="weather-container">
+        <!-- Weather cards will be added here by Jinja2 -->
+{% for item in weather_data %}
+<div class="weather-card">
+    <h2>{{ item.date }}</h2>
+    <h3>{{ item.hour }}</h3>
+    <p>Temperature: {{ item.temperature }}°C</p>
+    <p>Humidity: {{ item.humidity }}%</p>
+    <p>Weather: {{ weather_icon_map[item.weatherType].name }}</p>
+    <i class="{{ weather_icon_map[item.weatherType].icon }}"></i>
+</div>
+{% endfor %}
+    </div>
+</body>
+</html>
