@@ -61,3 +61,14 @@ def get_location_list():
         continent = location.find('continent').text
         location_list.append({'name': name, 'id': id, 'latitude': latitude, 'longitude': longitude, 'elevation': elevation, 'country': country, 'continent': continent})
     return location_list
+
+def get_location_mapping():
+    url = f"http://datapoint.metoffice.gov.uk/public/data/txt/wxfcs/mountainarea/datatype/locationId?key={api_key}"
+    response = requests.get(url)
+    text_data = response.content.decode("utf-8")
+    location_mapping = {}
+    for line in text_data.split("\n"):
+        if line:
+            location_id, location_name = line.split()
+            location_mapping[location_name] = location_id
+    return location_mapping
