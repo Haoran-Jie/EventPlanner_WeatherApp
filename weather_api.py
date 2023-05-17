@@ -3,7 +3,7 @@ import requests
 
 api_key = "070fea15-32d3-4422-80a7-1a0e3353d18a"
 
-def fetch_hourly_weather_data(location_id = "350731"):
+def fetch_next24hrs_weather_forecast(location_id = "350731"):
     base_url = "http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/"
     url = f"{base_url}{location_id}?res=3hourly&key={api_key}"
 
@@ -46,29 +46,76 @@ def fetch_hourly_weather_data(location_id = "350731"):
         return []
 
 
+
 def get_location_list():
-    url = f"http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/xml/sitelist?key={api_key}"
+    url = f"http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist?key={api_key}"
     response = requests.get(url)
-    xml_data = response.content
+    json_data = response.json()
     location_list = []
-    for location in xml_data.findall('Location'):
-        name = location.find('name').text
-        id = location.find('id').text
-        latitude = location.find('latitude').text
-        longitude = location.find('longitude').text
-        elevation = location.find('elevation').text
-        country = location.find('country').text
-        continent = location.find('continent').text
-        location_list.append({'name': name, 'id': id, 'latitude': latitude, 'longitude': longitude, 'elevation': elevation, 'country': country, 'continent': continent})
+    for location in json_data['Locations']['Location']:
+        name = location['name']
+        id = location['id']
+        latitude = location['latitude']
+        longitude = location['longitude']
+        location_list.append({'name': name, 'id': id, 'latitude': latitude, 'longitude': longitude})
     return location_list
 
-def get_location_mapping():
-    url = f"http://datapoint.metoffice.gov.uk/public/data/txt/wxfcs/mountainarea/datatype/locationId?key={api_key}"
+
+
+
+def get_future_day_location_forecast(location_id, target_date):
+    base_url = "http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/"
+    url = f"{base_url}{location_id}?res=3hourly&key={api_key}"
+
     response = requests.get(url)
-    text_data = response.content.decode("utf-8")
-    location_mapping = {}
-    for line in text_data.split("\n"):
-        if line:
-            location_id, location_name = line.split()
-            location_mapping[location_name] = location_id
-    return location_mapping
+
+    # Check that the request was successful
+    if response.status_code == 200:
+        data = response.json()
+
+        # Extract the weather data from the response
+        weather_reports = data['SiteRep']['DV']['Location']['Period']
+
+        # Prepare the list to hold the hourly data
+        hourly_data = []
+
+        # Calculate the target date
+        today = datetime.datetime.now().date()
+        target_date = today + datetime.timedelta(days=target_date)
+
+        # Iterate over the weather reports to extract hourly data
+        for report in weather_reports:
+            date = report['value'][:-1]  # Extract date from 'value' field
+
+            # Convert the date to a datetime object
+            report_date = datetime.datetime.strptime(date, "%Y-%m-%d").date()
+
+            # Check if the report date matches the target date
+            if report_date == target_date:
+                for rep in report['Rep']:
+                    # Convert minutes past midnight to hour
+                    hour = int(rep['$']) // 60
+
+                    hour_data = {
+                        "date": date,
+                        "hour": f"{hour:02d}:00",  # Formatting the hour
+                        "temperature": float(rep['T']),
+                        "humidity": rep['H'],
+                        "weatherType": rep['W'],  # Assuming this is the weather type
+                    }
+                    hourly_data.append(hour_data)
+
+        return hourly_data
+
+    else:
+        # Log an error message if the request was not successful
+        print(f"Error: Received status code {response.status_code} from the API")
+        return []
+
+
+
+
+
+if __name__ == "__main__":
+    print(len(get_location_list()))
+    # print(get_future_day_location_forecast(310069,1))

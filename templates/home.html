@@ -51,7 +51,10 @@
             border-radius: 20px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
             transition: transform .2s;
+            min-width: 300px; /* Set a minimum width for each card */
+            margin-right: 10px; 
         }
+        
 
         .weather-card:hover {
             transform: scale(1.05);
@@ -60,7 +63,12 @@
         #weather-container {
             display: flex;
             overflow-x: auto;
+            flex-wrap: wrap; /* Prevent cards from wrapping */
+            margin: 0 auto;
+            width: 100%; /* Set width to 100% */
+            padding-bottom: 20px; /* Add bottom padding to create space for scrollbar */
         }
+
 
         .weather-card h2,
         .weather-card h3,
@@ -182,11 +190,105 @@
         .weather-card i.text-white {
             color: rgb(244, 244, 244);
         }
+
+        /* Added CSS for the textbox */
+        #wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 24px;
+            margin-bottom: 100px;
+        }
+
+        #paper {
+            color: #FFF;
+            font-size: 20px;
+        }
+
+        #margin {
+            margin-left: 12px;
+            margin-bottom: 20px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            -o-user-select: none;
+            user-select: none;
+            color: #000;
+        }
+
+        #text {
+            width: 500px;
+            overflow: hidden;
+            background-color: #FFF;
+            color: #222;
+            font-family: Courier, monospace;
+            font-weight: normal;
+            font-size: 24px;
+            resize: none;
+            line-height: 40px;
+            padding-left: 100px;
+            padding-right: 100px;
+            padding-top: 45px;
+            padding-bottom: 34px;
+            background-image: url(https://static.tumblr.com/maopbtg/E9Bmgtoht/lines.png), url(https://static.tumblr.com/maopbtg/nBUmgtogx/paper.png);
+            background-repeat: repeat-y, repeat;
+            -webkit-border-radius: 12px;
+            border-radius: 12px;
+            -webkit-box-shadow: 0px 2px 14px #000;
+            box-shadow: 0px 2px 14px #000;
+            border-top: 1px solid #FFF;
+            border-bottom: 1px solid #FFF;
+        }
+
+        #title {
+            background-color: transparent;
+            border-bottom: 3px solid rgb(51, 50, 79);
+            color: rgb(51, 50, 79);
+            font-size: 20px;
+            font-family: Courier, monospace;
+            height: 28px;
+            font-weight: bold;
+            width: 220px;
+        }
+
+        #button {
+            cursor: pointer;
+            margin-top: 20px;
+            float: right;
+            height: 40px;
+            padding-left: 24px;
+            padding-right: 24px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+            font-size: 20px;
+            color: #FFF;
+            text-shadow: 0px -1px 0px #000000;
+            -webkit-border-radius: 8px;
+            border-radius: 8px;
+            border-top: 1px solid #FFF;
+            -webkit-box-shadow: 0px 2px 14px #000;
+            box-shadow: 0px 2px 14px #000;
+            background-color: #62add6;
+            background-image: url(https://static.tumblr.com/maopbtg/ZHLmgtok7/button.png);
+            background-repeat: repeat-x;
+        }
+
+        #button:active {
+            zoom: 1;
+            filter: alpha(opacity=80);
+            opacity: 0.8;
+        }
+
+        #button:focus {
+            zoom: 1;
+            filter: alpha(opacity=80);
+            opacity: 0.8;
+        }
     </style>
 </head>
 
 <body>
-    <h1 class="header">Cambridge</h1>
+    <h1 class="header">{{location}}</h1>
     <div class="toggle">
         <input type="checkbox" id="toggle-temperature" checked>
         <label for="toggle-temperature" data-label="°C"></label>
@@ -205,10 +307,20 @@
         {% endfor %}
     </div>
 
+    <div id="wrapper">
+        <form id="paper" method="get" action="">
+            <div id="margin">Title: <input id="title" type="text" name="title"></div>
+            <textarea placeholder="Enter something funny." id="text" name="text" rows="4"
+                style="overflow: hidden; word-wrap: break-word; resize: none; height: 160px;"></textarea>
+            <br>
+            <input id="button" type="submit" value="Create">
+        </form>
+    </div>
+
     <div class="sticky-nav">
-        <a href="/">Home</a>
-        <a href="/filter">Plan</a>
-        <a href="/setting">Settings</a>
+        <a href="/"><i class="fas fa-home"></i> Home</a>
+        <a href="/filter"><i class="fas fa-filter"></i> Plan</a>
+        <a href="/setting"><i class="fas fa-cog"></i> Settings</a>
     </div>
 
     <script>
@@ -224,7 +336,8 @@
                 });
                 toggleLabel.setAttribute('data-label', '°C');
             } else {
-                temperatureElements.forEach(function (element) {
+                temperatureElements.forEach(function (element
+                ) {
                     const celsius = element.getAttribute('data-celsius');
                     const fahrenheit = (celsius * 9 / 5) + 32;
                     element.textContent = fahrenheit.toFixed(1) + '°F';
@@ -233,6 +346,7 @@
             }
         });
     </script>
+
 </body>
 
 </html>
