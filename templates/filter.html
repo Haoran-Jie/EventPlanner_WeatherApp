@@ -2,45 +2,111 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <title>Sticky Navigation Bar</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Desired Weather: </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js"></script>
+    <script>
+    function showClicked(button) {
+        if (button.dataset.clicked === "true") {
+        button.style.backgroundColor = "white";
+        button.style.fontWeight = "normal";
+        button.dataset.clicked = "false";
+      } else {
+        button.style.backgroundColor = "#F0F8FF";
+        button.style.fontWeight = "bold";
+        button.dataset.clicked = "true";
+      }
+    }
+    function filterWeather(condition) {
+      var weatherItems = document.getElementsByClassName('weather-item');
+      for (var i = 0; i < weatherItems.length; i++) {
+        var item = weatherItems[i];
+        item.style.display = 'none';
+      }
+      var filteredItems = document.getElementsByClassName('weather-' + condition);
+      for (var j = 0; j < filteredItems.length; j++) {
+        var filteredItem = filteredItems[j];
+        filteredItem.style.display = 'block';
+      }
+      var buttons = document.getElementsByClassName('button');
+      for (var k = 0; k < buttons.length; k++) {
+        var button = buttons[k];
+        button.classList.remove('active');
+      }
+      event.target.classList.add('active');
+
+    }
+    $(document).ready(function() {
+      $('#calendar').fullCalendar({
+        // Configure the calendar options here
+        // For example:
+        header: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'month,agendaWeek,agendaDay'
+        },
+        // Add your event sources or events array here
+        // For example:
+        events: [
+          {
+            title: 'Event 1',
+            start: '2023-05-17'
+          },
+          {
+            title: 'Event 2',
+            start: '2023-05-18',
+            end: '2023-05-20'
+          },
+          // Add more events as needed
+        ]
+      });
+    });
+  </script>
     <style>
-        .sticky-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #fff;
-            box-shadow: 0px -2px 10px rgba(0, 0, 0, 0.2);
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            height: 50px;
-            font-family: Georgia, 'Times New Roman', Times, serif;
-        }
+    .button {
+    border: 1p;
+    background: none;
+    }
 
-        .sticky-nav a {
-            text-decoration: none;
-            color: #333;
-            font-size: 14px;
-            font-weight: bold;
-            transition: font-size 0.5s ease, color 0.3s ease;
-        }
-
-        .sticky-nav a:hover {
-            color: rgb(38, 177, 195);
-            font-size: 18px;
-        }
-    </style>
+    .icon {
+        padding-top: 10px;
+    }
+    #calendar {
+      margin-top: 20px;
+    }
+</style>
 </head>
-
 <body>
-    <div class="sticky-nav">
-        <a href="/"><i class="fas fa-home"></i> Home</a>
-        <a href="/filter"><i class="fas fa-filter"></i> Plan</a>
-        <a href="/setting"><i class="fas fa-cog"></i> Settings</a>
-    </div>
-</body>
+<h1>Desired Weather</h1>
+<div>
+    <button class="button" data-clicked="false" onclick="filterWeather('sun'); showClicked(this)">
+        <img class = "icon" src = "https://cdn-icons-png.flaticon.com/512/831/831682.png" width = "80" height = "80">
+        <p> Sunny </p>
+    </button>
+    <button class="button" data-clicked="false" onclick="filterWeather('rainy'); showClicked(this)">
+        <img class = "icon" src = "https://cdn-icons-png.flaticon.com/512/1779/1779907.png" width = "80" height = "80">
+        <p> Rainy </p>
+    </button>
+    <button class="button" onclick="filterWeather('cloudy'); showClicked(this)" data-clicked="false" >
+        <img class = "icon"  src = "https://cdn-icons-png.flaticon.com/512/4343/4343597.png" width = "80" height = "80">
+        <p> Cloudy </p>
+    </button>
+    <button class="button" data-clicked="false" onclick="filterWeather('snow'); showClicked(this)">
+        <img class = "icon"  src = "https://cdn-icons-png.flaticon.com/512/8675/8675121.png" width = "80" height = "80">
+        <p> Snow </p>
+    </button>
+    <button class="button" data-clicked="false" onclick="filterWeather('wind'); showClicked(this)">
+        <img class = "icon" src = "https://cdn-icons-png.flaticon.com/512/4005/4005837.png" width = "80" height = "80">
+        <p> Wind </p>
+    </button>
+</div>
 
+<div class="weather-item weather-cloudy">
+    <h2>Cloudy Weather</h2>
+    <!-- Place your cloudy weather content here -->
+</div>
+<div id="calendar"></div>
+
+</body>
 </html>
