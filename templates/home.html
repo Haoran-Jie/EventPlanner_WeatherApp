@@ -25,7 +25,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: 130vh;
             background: linear-gradient(45deg, #85FFBD, #FFFB7D, #FF85E5);
             background-size: 200% 200%;
             animation: gradient 5s ease infinite;
@@ -34,10 +34,13 @@
         }
 
         .header {
-            font-size: 2em;
+            font-size: 4em;
             margin-bottom: 40px;
             font-family: 'Times New Roman', Times, serif;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(45deg, #f83a3a 10%, #f13dd4 50%, #7000ff 90%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .weather-card {
@@ -51,34 +54,53 @@
             border-radius: 20px;
             box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
             transition: transform .2s;
-            min-width: 300px; /* Set a minimum width for each card */
-            margin-right: 10px; 
+            min-width: 200px;
+            /* Set a minimum width for each card */
+            min-height: 100px;
+            margin-right: 10px;
+            overflow-y: hidden;
         }
-        
+
 
         .weather-card:hover {
             transform: scale(1.05);
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid #333;
+
         }
+
+        .weather-card:hover h2,
+        .weather-card:hover h3,
+        .weather-card:hover p {
+            font-weight: bold;
+        }
+
 
         #weather-container {
             display: flex;
             overflow-x: auto;
-            flex-wrap: wrap; /* Prevent cards from wrapping */
+            flex-wrap: nowrap;
             margin: 0 auto;
-            width: 100%; /* Set width to 100% */
-            padding-bottom: 20px; /* Add bottom padding to create space for scrollbar */
+            width: 100%;
+            padding-bottom: 20px;
+            /* Add bottom padding to create space for scrollbar */
         }
 
 
         .weather-card h2,
         .weather-card h3,
         .weather-card p {
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .weather-card i {
             font-size: 24px;
         }
+
+        .card-text {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+        }
+
 
         .toggle {
             margin-bottom: 10px;
@@ -214,6 +236,7 @@
             -o-user-select: none;
             user-select: none;
             color: #000;
+            font-family: Georgia, 'Times New Roman', Times, serif;
         }
 
         #text {
@@ -242,12 +265,11 @@
 
         #title {
             background-color: transparent;
-            border-bottom: 3px solid rgb(51, 50, 79);
-            color: rgb(51, 50, 79);
+            border-bottom: 3px solid black;
+            color: black;
             font-size: 20px;
-            font-family: Courier, monospace;
+            font-family: Georgia, 'Times New Roman', Times, serif;
             height: 28px;
-            font-weight: bold;
             width: 220px;
         }
 
@@ -296,13 +318,14 @@
     <div id="weather-container">
         <!-- Weather cards will be added here by Jinja2 -->
         {% for item in weather_data %}
-        <div class="weather-card">
-            <h2>{{ item.date }}</h2>
-            <h3>{{ item.hour }}</h3>
-            <p class="temperature" data-celsius="{{ item.temperature }}">{{ item.temperature }}°C</p>
-            <p>Humidity: {{ item.humidity }}%</p>
-            <p>Weather: {{ weather_icon_map[item.weatherType].name }}</p>
-            <i class="{{ weather_icon_map[item.weatherType].icon }}"></i>
+        <div class="weather-card card">
+            <div class="card-body">
+                <h2 class="card-title card-text">{{ item.date +" "+ item.hour}}</h2>
+                <p class="card-text mb-2 temperature" data-celsius="{{ item.temperature }}">{{ item.temperature }}°C</p>
+                <p class="card-text mb-1"><i class="{{ weather_icon_map[item.weatherType].icon }}"></i> {{
+                    weather_icon_map[item.weatherType].name }}</p>
+                <p class="card-text mb-0">Humidity: {{ item.humidity }}%</p>
+            </div>
         </div>
         {% endfor %}
     </div>
@@ -319,7 +342,7 @@
 
     <div class="sticky-nav">
         <a href="/"><i class="fas fa-home"></i> Home</a>
-        <a href="/filter"><i class="fas fa-filter"></i> Plan</a>
+        <a href="/filter"><i class="fas fa-tasks"></i> Plan</a>
         <a href="/setting"><i class="fas fa-cog"></i> Settings</a>
     </div>
 
