@@ -45,7 +45,7 @@ def home():
     # Logic to fetch weather data and pass it to the template
     # Render the home template and pass the weather data to it
     weather_data = weather_api.fetch_next24hrs_weather_forecast()
-    print(weather_data)
+    # print(weather_data)
     return render_template('home.html', weather_data=weather_data, weather_icon_map=weather_icon_map, location="Cambridge")
 
                
