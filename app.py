@@ -66,7 +66,7 @@ def event_planning():
     return render_template('event_planning.html', event_data=event_data)
 
 @app.route('/setting', methods=['GET', 'POST'])
-def settle():
+def setting():
     # Logic to handle GPS opening/closing
     # Render the settle template
     return render_template('setting.html')
