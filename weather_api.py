@@ -36,6 +36,7 @@ def fetch_next24hrs_weather_forecast(location_id = "350731"):
                 }
                 # Add condition to filter out data older than 24 hours
                 if datetime.datetime.strptime(hour_data['date'] + "T" + hour_data['hour'], "%Y-%m-%dT%H:%M") >= datetime.datetime.now() and datetime.datetime.strptime(hour_data['date'] + "T" + hour_data['hour'], "%Y-%m-%dT%H:%M") < datetime.datetime.now() + datetime.timedelta(days=1):
+                    hour_data['date']=str(hour_data['date'])[5:]
                     hourly_data.append(hour_data)
 
         return hourly_data
@@ -97,7 +98,7 @@ def get_future_day_location_forecast(location_id, target_date):
                     hour = int(rep['$']) // 60
 
                     hour_data = {
-                        "date": date,
+                        "date": str(date)[5:],
                         "hour": f"{hour:02d}:00",  # Formatting the hour
                         "temperature": float(rep['T']),
                         "humidity": rep['H'],
