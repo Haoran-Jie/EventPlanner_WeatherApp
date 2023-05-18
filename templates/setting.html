@@ -33,9 +33,58 @@
             font-size: 18px;
         }
     </style>
+
+    <script>
+        function onLoad(){
+        }
+
+        function update(){
+            var username = document.getElementById("updatename").val();
+            localStorage.setItem("username", username);
+            var useremail = document.getElementById("updateemail").val();
+            localStorage.setItem("useremail", useremail);
+
+            //clear inputs
+            var allInputs = document.querySelectorAll('input');
+            allInputs.forEach(singleInput => singleInput.value = '');
+
+            document.getElementById("username").innerHTML = username;
+            document.getElementById("useremail").innerHTML = useremail;
+        }
+
+        function refreshData(){
+            var username = localStorage.getItem("username");
+            var useremail = localStorage.getItem("useremail");
+
+        }
+
+    </script>
 </head>
 
 <body>
+    <h1>Settings</h1>
+    <div class="userDetails">
+        <p>Input details to get notified on any weather changes.</p>
+        <p>Name: {{ name }}</p>
+        <p>Email: {{ email }}</p>
+    </div>
+
+    <form action="/setting" method="post">
+        <p>Update details</p>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name" />
+
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" placeholder="Enter your email" />
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <form action="/weather_change" method="post">
+        <p>Change the weather (for notifications testing)</p>
+        <button type="submit" name="weather_change" value="button">Change Weather</button>
+    </form>
+
     <div class="sticky-nav">
         <a href="/"><i class="fas fa-home"></i> Home</a>
         <a href="/filter"><i class="fas fa-tasks"></i> Plan</a>
