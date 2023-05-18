@@ -132,9 +132,11 @@ if __name__ == "__main__":
     print(len(get_location_list()))
     # print(get_future_day_location_forecast(310069,1))
 
-def get_upcoming_suitable_datetimes(location_id, min_temp, max_temp, min_wind, max_wind, weather_type):
+def get_upcoming_suitable_datetimes(location_id, min_temp, max_temp, weather_types):
     """ Returns a list of upcoming dates/times tuples that fit the given requirements """
-    # weather_type strings: ["CLEAR", "CLOUDY", "RAINY", "SNOWY", "ANYTHING"]
+    # min_temp, max_temp, are all numbers, weather_types is a list of weather_type:
+    # weather type strings: ["sunny", "cloudy", "rainy", "snowy", "windy"]
+    # Note that "windy" is not a weather code in the API but this function treats a wind speed of over 23mph to be "windy"
     url = f"http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/{location_id}?res=3hourly&key={api_key}"
     response = requests.get(url)
 
@@ -155,28 +157,28 @@ def get_upcoming_suitable_datetimes(location_id, min_temp, max_temp, min_wind, m
             w = int(rep['W']) # Weather code, 0 = clear night, 1 = sunny day, (...) 30 = thunder
             if not min_temp <= t <= max_temp:
                 continue
-            if not min_wind <= s <= max_wind:
-                continue
-            if weather_type == "CLEAR" and w not in [0, 1]: # Clear/sunny
-                continue
-            if weather_type == "CLOUDY" and w not in [2, 3, 5, 6, 7, 8]: # Above or cloudy
-                continue
-            if weather_type == "RAINY" and w not in [9, 10, 11, 12, 13, 14, 15, 28, 29, 30]:
-                continue
-            if weather_type == "SNOWY" and w not in [22, 23, 24, 25, 26, 27, 28]: # Above or heavy rain
-                continue
+            if w in [0, 1]: weather_type = "sunny"
+            if w in [2, 3, 5, 6, 7, 8]: weather_type = "cloudy"
+            if w in [9, 10, 11, 12, 13, 14, 15, 28, 29, 30]: weather_type = "rainy"
+            if w in [22, 23, 24, 25, 26, 27, 28]: weather_type = "snowy"
+            if weather_type not in weather_types:
+                if "windy" not in weather_types:
+                    continue
+                if "windy" in weather_types and s < 23:
+                    continue
+
             # Don't need to check weather_type == "ANYTHING" because anything goes
             suitable_datetimes.append((date, minutes))
     return suitable_datetimes
 
-def get_upcoming_days_suitable(location_id, min_temp, max_temp, min_wind, max_wind, weather_type):
+def get_upcoming_days_suitable(location_id, min_temp, max_temp, weather_types):
     """ Returns a list of 5 booleans representing whether or not the next 5 days contain a time that fits the given requirements """
     # Example usage:
-    # get_upcoming_days_suitable(350731, 0, 10, 0, 100, "CLOUDY")
-    # Returns [False, True, True, False, False]
-    # Representing that tomorrow and the day after tomorrow fit the requirements: location 350731, temperature between 0 to 10, wind speed between 0 to 100, weather type cloudy
+    # get_upcoming_days_suitable(350731, 0, 10, ["sunny", "cloudy"])
+    # Returns [False, True, True, True, True]
+    # Representing that tomorrow and the day after tomorrow fit the requirements: location 350731, temperature between 0 to 10, weather type sunny or cloudy
 
-    suitable_datetimes = get_upcoming_suitable_datetimes(location_id, min_temp, max_temp, min_wind, max_wind, weather_type)
+    suitable_datetimes = get_upcoming_suitable_datetimes(location_id, min_temp, max_temp, weather_types)
     suitable_days = []
     today = datetime.date.today()
     for i in range(5):
@@ -184,3 +186,5 @@ def get_upcoming_days_suitable(location_id, min_temp, max_temp, min_wind, max_wi
         print(2, [(datetime.date.today() + datetime.timedelta(days=i)).strftime("%Y-%m-%dZ") == dt[0] for dt in suitable_datetimes])
         suitable_days.append(any([(datetime.date.today() + datetime.timedelta(days=i)).strftime("%Y-%m-%dZ") == dt[0] for dt in suitable_datetimes]))
     return suitable_days
+
+print(get_upcoming_days_suitable(350731, 0, 10, ["sunny", "cloudy"]))
