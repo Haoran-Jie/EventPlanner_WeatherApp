@@ -4,8 +4,8 @@ from email.message import EmailMessage
 def send_email():
     port = 465  # For SSL
     smtp_server = "smtp.gmail.com"
-    sender_email = "davidcomputer114@gmail.com"  # Enter your address
-    receiver_email = "davidcomputer114@gmail.com"  # Enter receiver address
+    sender_email = "davidcomputer114@gmail.com"  
+    receiver_email = "davidcomputer114@gmail.com"  
     password = "avzuyrwosewmelkl"
 
     msg = EmailMessage()

@@ -9,32 +9,26 @@ def fetch_next24hrs_weather_forecast(location_id = "350731"):
 
     response = requests.get(url)
 
-    # Check that the request was successful
     if response.status_code == 200:
         data = response.json()
 
-        # Extract the weather data from the response
         weather_reports = data['SiteRep']['DV']['Location']['Period']
 
-        # Prepare the list to hold the hourly data
         hourly_data = []
 
-        # Iterate over the weather reports to extract hourly data
         for report in weather_reports:
-            date = report['value'][:-1]  # Extract date from 'value' field
+            date = report['value'][:-1]  
             
             for rep in report['Rep']:
-                # Convert minutes past midnight to hour
                 hour = int(rep['$']) // 60
 
                 hour_data = {
                     "date": date,
-                    "hour": f"{hour:02d}:00",  # Formatting the hour
+                    "hour": f"{hour:02d}:00", 
                     "temperature": float(rep['T']),
                     "humidity": rep['H'],
-                    "weatherType": rep['W'],  # Assuming this is the weather type
+                    "weatherType": rep['W'],  
                 }
-                # Add condition to filter out data older than 24 hours
                 if datetime.datetime.strptime(hour_data['date'] + "T" + hour_data['hour'], "%Y-%m-%dT%H:%M") >= datetime.datetime.now() and datetime.datetime.strptime(hour_data['date'] + "T" + hour_data['hour'], "%Y-%m-%dT%H:%M") < datetime.datetime.now() + datetime.timedelta(days=1):
                     hour_data['date']=str(hour_data['date'])[5:]
                     hourly_data.append(hour_data)
@@ -42,7 +36,6 @@ def fetch_next24hrs_weather_forecast(location_id = "350731"):
         return hourly_data
 
     else:
-        # Log an error message if the request was not successful
         print(f"Error: Received status code {response.status_code} from the API")
         return []
 
@@ -81,46 +74,38 @@ def get_future_day_location_forecast(location_id, target_date):
 
     response = requests.get(url)
 
-    # Check that the request was successful
     if response.status_code == 200:
         data = response.json()
 
-        # Extract the weather data from the response
         weather_reports = data['SiteRep']['DV']['Location']['Period']
 
-        # Prepare the list to hold the hourly data
         hourly_data = []
 
-        # Calculate the target date
         today = datetime.datetime.now().date()
         target_date = today + datetime.timedelta(days=target_date)
 
-        # Iterate over the weather reports to extract hourly data
         for report in weather_reports:
-            date = report['value'][:-1]  # Extract date from 'value' field
+            date = report['value'][:-1] 
 
-            # Convert the date to a datetime object
+
             report_date = datetime.datetime.strptime(date, "%Y-%m-%d").date()
 
-            # Check if the report date matches the target date
             if report_date == target_date:
                 for rep in report['Rep']:
-                    # Convert minutes past midnight to hour
                     hour = int(rep['$']) // 60
 
                     hour_data = {
                         "date": str(date)[5:],
-                        "hour": f"{hour:02d}:00",  # Formatting the hour
+                        "hour": f"{hour:02d}:00", 
                         "temperature": float(rep['T']),
                         "humidity": rep['H'],
-                        "weatherType": rep['W'],  # Assuming this is the weather type
+                        "weatherType": rep['W'],  
                     }
                     hourly_data.append(hour_data)
 
         return hourly_data
 
     else:
-        # Log an error message if the request was not successful
         print(f"Error: Received status code {response.status_code} from the API")
         return []
 
@@ -134,9 +119,6 @@ if __name__ == "__main__":
 
 def get_upcoming_suitable_datetimes(location_id, min_temp, max_temp, weather_types):
     """ Returns a list of upcoming dates/times tuples that fit the given requirements """
-    # min_temp, max_temp, are all numbers, weather_types is a list of weather_type:
-    # weather type strings: ["sunny", "cloudy", "rainy", "snowy", "windy"]
-    # Note that "windy" is not a weather code in the API but this function treats a wind speed of over 23mph to be "windy"
     url = f"http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/{location_id}?res=3hourly&key={api_key}"
     response = requests.get(url)
 
@@ -150,11 +132,11 @@ def get_upcoming_suitable_datetimes(location_id, min_temp, max_temp, weather_typ
     for day in weather_reports:
         date = day['value']
         for rep in day['Rep']:
-            minutes = int(rep['$']) # Minutes after UTC
-            pp = float(rep['Pp']) # Precipitation probability in percentage
-            s = float(rep['S']) # Wind speed (mph)
-            t = float(rep['T']) # Temp in C
-            w = int(rep['W']) # Weather code, 0 = clear night, 1 = sunny day, (...) 30 = thunder
+            minutes = int(rep['$']) 
+            pp = float(rep['Pp']) 
+            s = float(rep['S']) 
+            t = float(rep['T']) 
+            w = int(rep['W']) 
             if not min_temp <= t <= max_temp:
                 continue
             if w in [0, 1]: weather_type = "sunny"

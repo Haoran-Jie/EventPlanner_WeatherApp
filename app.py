@@ -4,7 +4,6 @@ import weather_api, notification_api
 app = Flask(__name__)
 
 
-# Mapping from weather type codes to names and icon class names
 weather_icon_map = {
     "0": {"name": "Clear night", "icon": "fas fa-moon text-blue"},
     "1": {"name": "Sunny day", "icon": "fas fa-sun text-yellow"},
@@ -55,8 +54,6 @@ location_list = weather_api.get_location_list()
 
 @app.route("/")
 def home():
-    # Logic to fetch weather data and pass it to the template
-    # Render the home template and pass the weather data to it
     weather_data = weather_api.fetch_next24hrs_weather_forecast()
     # print(weather_data)
     return render_template(
@@ -69,24 +66,18 @@ def home():
 
 @app.route("/filter", methods=["GET", "POST"])
 def filter():
-    # Logic to handle form submission and filtering of weather data
-    # Render the filter template with the filtered weather data
     filtered_data = 0
     return render_template("filter.html", filtered_data=filtered_data)
 
 
 @app.route("/event-planning", methods=["GET", "POST"])
 def event_planning():
-    # Logic to handle event planning and note-taking
-    # Render the event planning template with the event data
     event_data = 0
     return render_template("event_planning.html", event_data=event_data)
 
 
 @app.route("/setting", methods=["GET", "POST"])
 def setting():
-    # Logic to handle GPS opening/closing
-    # Render the settle template
     if request.method == 'POST':
         name = request.form['name']
         email = request.form['email']
@@ -124,7 +115,6 @@ def forecast(location_id, days_in_future):
 
 @app.route('/check-requirements', methods=['POST'])
 def check_requirements():
-    # Extract the latitude, longitude, and selected weather from the request
     data = request.get_json()
     latitude = data['latitude']
     longitude = data['longitude']
@@ -133,14 +123,10 @@ def check_requirements():
     location_id = weather_api.get_nearest_site_id(latitude, longitude)
     print(location_id)  # 353464
     print(selected_weather)
-    # Call your backend function to check the requirements and get the result
     result = weather_api.get_upcoming_days_suitable(location_id,-10,20,selected_weather)
 
-    # Create the response JSON object
     response = {
         'locationId': location_id,
         'result': result
     }
-
-    # Return the response as a JSON
     return jsonify(response)
