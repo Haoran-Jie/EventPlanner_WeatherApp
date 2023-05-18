@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>Integration Example</title>
+  <title>Filter</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js"></script>
@@ -58,6 +58,20 @@
       /* Add margin to center the map horizontally */
     }
 
+
+    body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 170vh;
+            background: linear-gradient(45deg, #85FFBD, #FFFB7D, #FF85E5);
+            background-size: 200% 200%;
+            animation: gradient 5s ease infinite;
+            font-family: Arial, sans-serif;
+            margin: 0;
+        }
+
     .weather-card {
       display: flex;
       flex-direction: column;
@@ -98,6 +112,14 @@
       padding-bottom: 20px;
       /* Add bottom padding to create space for scrollbar */
     }
+
+    #checkbutton {
+      text-align: center;
+      font-size: 25px;
+      display: block;
+      background: #191970;
+      font-weight: bold;
+    }
   </style>
 </head>
 
@@ -131,13 +153,14 @@
     </button>
 
   </div>
+  <div id="map"></div>
+  <button style ="color:white; font-size: 2.0vw; font-family: Arial; font-weight: bold"; id = "checkbutton" onclick="checkRequirementsAndUpdate()">Check Requirements</button>
 
   <div id="weather-container">
     <!-- Weather cards will be added here -->
   </div>
 
-  <div id="map"></div>
-  <button onclick="checkRequirementsAndUpdate()">Check Requirements</button>
+  
 
   <div class="sticky-nav">
     <a href="/"><i class="fas fa-home"></i> Home</a>
