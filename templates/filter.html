@@ -50,11 +50,11 @@
     }
 
     #map {
-      height: 300px; /* Adjust the height as desired */
+      height: calc(100vh - 350px); /* Adjust the height as desired */
       width: 90%; /* Adjust the width as desired */
       margin: 20px auto; /* Add margin to center the map horizontally */
     }
-    
+
     .weather-card {
       display: flex;
       flex-direction: column;
@@ -95,7 +95,7 @@
   </style>
 </head>
 
-<body>
+<body style="height: 150vh;">
   <h1>Desired Weather</h1>
   <div>
     <button class="button" data-clicked="false" onclick="filterWeather('sun'); showClicked(this)">
@@ -127,6 +127,7 @@
   <div id="map"></div>
 
   <button onclick="setLocation()">Set Location</button>
+  <button onclick="checkRequirementsAndUpdate()">Check Requirements</button>
 
   <div class="sticky-nav">
     <a href="/"><i class="fas fa-home"></i> Home</a>
@@ -225,25 +226,57 @@
 
     function setLocation() {
       var lngLat = marker.getLngLat();
-      var magnitude = 5.0; // Replace with your desired magnitude value
+      var selectedWeather = getSelectedWeather();
 
-      // Send the magnitude and longitude data to your backend (Flask)
-      // You can use AJAX or fetch to send the data to your Flask server
-      // Example using jQuery's AJAX:
-      $.ajax({
-        url: '/set-location',
-        method: 'POST',
-        data: {
-          latitude: lngLat.lat,
-          longitude: lngLat.lng
-        },
-        success: function (response) {
-          console.log('Location data sent successfully.');
-        },
-        error: function (error) {
-          console.error('Error sending location data:', error);
+      // Call your JavaScript function and pass the latitude, longitude, and selected weather
+      var satisfiedRequirements = checkRequirements(lngLat.lat, lngLat.lng, selectedWeather);
+      
+      // Update the weather cards' colors based on the satisfied requirements
+      updateCardColors(satisfiedRequirements);
+    }
+
+    function checkRequirements(latitude, longitude, selectedWeather) {
+      // Call your backend function and pass the latitude, longitude, and selected weather
+      // Return an array of boolean values indicating whether the requirements are satisfied or not
+      // You can replace this code with your own implementation
+      
+      // Example implementation
+      var satisfiedRequirements = [];
+      for (var i = 0; i < 5; i++) {
+        satisfiedRequirements.push(Math.random() < 0.5); // Randomly generate boolean values
+      }
+      
+      return satisfiedRequirements;
+    }
+
+    function updateCardColors(satisfiedRequirements) {
+      var cards = document.getElementsByClassName('weather-card');
+      
+      for (var i = 0; i < cards.length; i++) {
+        var card = cards[i];
+        var requirementSatisfied = satisfiedRequirements[i];
+        
+        if (requirementSatisfied) {
+          card.style.backgroundColor = 'green';
+        } else {
+          card.style.backgroundColor = 'red';
         }
-      });
+      }
+    }
+
+    function getSelectedWeather() {
+      var buttons = document.getElementsByClassName('button');
+      var selectedWeather = [];
+      
+      for (var i = 0; i < buttons.length; i++) {
+        var button = buttons[i];
+        
+        if (button.dataset.clicked === "true") {
+          selectedWeather.push(button.getAttribute('data-weather-type'));
+        }
+      }
+      
+      return selectedWeather;
     }
 
     function showClicked(button) {
@@ -275,6 +308,17 @@
         button.classList.remove('active');
       }
       event.target.classList.add('active');
+    }
+    
+    function checkRequirementsAndUpdate() {
+      var lngLat = marker.getLngLat();
+      var selectedWeather = getSelectedWeather();
+
+      // Call your JavaScript function and pass the latitude, longitude, and selected weather
+      var satisfiedRequirements = checkRequirements(lngLat.lat, lngLat.lng, selectedWeather);
+      
+      // Update the weather cards' colors based on the satisfied requirements
+      updateCardColors(satisfiedRequirements);
     }
   </script>
 </body>
