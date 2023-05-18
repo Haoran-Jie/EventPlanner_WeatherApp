@@ -1,4 +1,4 @@
-from flask import Flask, render_template,request
+from flask import Flask, render_template,request,jsonify
 import weather_api
 
 app = Flask(__name__)
@@ -118,3 +118,21 @@ def set_location():
     # Save the data to your backend or perform any other operations
     
     return "Location data received and processed successfully"
+
+
+@app.route('/check-requirements', methods=['POST'])
+def check_requirements():
+    # Extract the latitude, longitude, and selected weather from the request
+    data = request.get_json()
+    latitude = data['latitude']
+    longitude = data['longitude']
+    selected_weather = data['selectedWeather']
+
+    location_id = weather_api.get_nearest_site_id(latitude,longitude)
+    print(location_id)
+    print(selected_weather)
+    # Call your backend function to check the requirements and get the result
+    result = [True, False, True, True, False]
+
+    # Return the result as a JSON response
+    return jsonify(result)

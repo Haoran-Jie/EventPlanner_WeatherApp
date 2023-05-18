@@ -50,9 +50,12 @@
     }
 
     #map {
-      height: calc(100vh - 350px); /* Adjust the height as desired */
-      width: 90%; /* Adjust the width as desired */
-      margin: 20px auto; /* Add margin to center the map horizontally */
+      height: calc(100vh - 350px);
+      /* Adjust the height as desired */
+      width: 90%;
+      /* Adjust the width as desired */
+      margin: 20px auto;
+      /* Add margin to center the map horizontally */
     }
 
     .weather-card {
@@ -66,8 +69,10 @@
       border-radius: 20px;
       box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
       transition: transform .2s;
-      min-width: 200px; /* Set a minimum width for each card */
-      min-height: 200px; /* Set a minimum height for each card */
+      min-width: 200px;
+      /* Set a minimum width for each card */
+      min-height: 200px;
+      /* Set a minimum height for each card */
       margin-right: 10px;
       overflow-y: hidden;
     }
@@ -90,7 +95,8 @@
       flex-wrap: nowrap;
       margin: 0 auto;
       width: 100%;
-      padding-bottom: 20px; /* Add bottom padding to create space for scrollbar */
+      padding-bottom: 20px;
+      /* Add bottom padding to create space for scrollbar */
     }
   </style>
 </head>
@@ -125,8 +131,6 @@
   </div>
 
   <div id="map"></div>
-
-  <button onclick="setLocation()">Set Location</button>
   <button onclick="checkRequirementsAndUpdate()">Check Requirements</button>
 
   <div class="sticky-nav">
@@ -156,8 +160,6 @@
     map.on('click', function (e) {
       marker.setLngLat(e.lngLat).addTo(map);
     });
-
-    // Rest of the code...
 
     // Weather data for each day
     var weatherData = [
@@ -224,38 +226,44 @@
       return weatherTypeNameMap[weatherType];
     }
 
-    function setLocation() {
-      var lngLat = marker.getLngLat();
-      var selectedWeather = getSelectedWeather();
-
-      // Call your JavaScript function and pass the latitude, longitude, and selected weather
-      var satisfiedRequirements = checkRequirements(lngLat.lat, lngLat.lng, selectedWeather);
-      
-      // Update the weather cards' colors based on the satisfied requirements
-      updateCardColors(satisfiedRequirements);
-    }
-
     function checkRequirements(latitude, longitude, selectedWeather) {
-      // Call your backend function and pass the latitude, longitude, and selected weather
-      // Return an array of boolean values indicating whether the requirements are satisfied or not
-      // You can replace this code with your own implementation
-      
-      // Example implementation
-      var satisfiedRequirements = [];
-      for (var i = 0; i < 5; i++) {
-        satisfiedRequirements.push(Math.random() < 0.5); // Randomly generate boolean values
-      }
-      
-      return satisfiedRequirements;
+      // Create the request body
+      var requestData = {
+        latitude: latitude,
+        longitude: longitude,
+        selectedWeather: selectedWeather
+      };
+
+      // Send an HTTP POST request to the Flask route
+      fetch('/check-requirements', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestData)
+      })
+        .then(function (response) {
+          // Parse the JSON response
+          return response.json();
+        })
+        .then(function (result) {
+          // Process the result received from the backend
+          updateCardColors(result);
+        })
+        .catch(function (error) {
+          // Handle any errors that occurred during the request
+          console.error('Error:', error);
+        });
     }
+
 
     function updateCardColors(satisfiedRequirements) {
       var cards = document.getElementsByClassName('weather-card');
-      
+
       for (var i = 0; i < cards.length; i++) {
         var card = cards[i];
         var requirementSatisfied = satisfiedRequirements[i];
-        
+
         if (requirementSatisfied) {
           card.style.backgroundColor = 'green';
         } else {
@@ -267,15 +275,15 @@
     function getSelectedWeather() {
       var buttons = document.getElementsByClassName('button');
       var selectedWeather = [];
-      
+
       for (var i = 0; i < buttons.length; i++) {
         var button = buttons[i];
-        
+
         if (button.dataset.clicked === "true") {
           selectedWeather.push(button.getAttribute('data-weather-type'));
         }
       }
-      
+
       return selectedWeather;
     }
 
@@ -309,14 +317,14 @@
       }
       event.target.classList.add('active');
     }
-    
+
     function checkRequirementsAndUpdate() {
       var lngLat = marker.getLngLat();
       var selectedWeather = getSelectedWeather();
 
       // Call your JavaScript function and pass the latitude, longitude, and selected weather
       var satisfiedRequirements = checkRequirements(lngLat.lat, lngLat.lng, selectedWeather);
-      
+
       // Update the weather cards' colors based on the satisfied requirements
       updateCardColors(satisfiedRequirements);
     }
