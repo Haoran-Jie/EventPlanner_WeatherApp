@@ -132,6 +132,77 @@
         .card-text {
             font-family: Georgia, 'Times New Roman', Times, serif;
         }
+        
+        
+        
+        .event-row {
+        border-bottom: 1px solid black;
+        padding-bottom: 1em;
+        margin-bottom: 1em;
+        }
+
+        .event-row:last-child {
+            border: none;
+            margin-bottom: 0em;
+        }
+
+        .event-container{
+         border-width:3px;
+         border-style:solid;
+         border-color:#D8DED7;
+         background: #F8FEF7;
+         border-radius: 5px;
+        width: 1000px;
+        margin: 0 auto;
+        padding: 0 1.5em;
+        margin-bottom: 5em;
+        margin-top: 2em;
+        }
+        .event-item{
+        display:inline-block;
+        padding-right:.5em;
+        font-family: Georgia, 'Times New Roman', Times, serif;
+        font-size: 1.3em;
+
+        padding-right: .5em;
+        }
+
+        .event-name{
+        width: 40%;
+        }
+
+        .event-time{
+        width: 20%;
+        }
+        .event-day{
+        width: 25%;
+        }
+
+        .event-button{
+        max-width: 19%;
+        font-size: 20px;
+        }
+
+        .event-button-delete:hover{
+            background-color: #F65C5299;
+        }
+
+        .event-button-delete{
+        color: white;
+        background-color: #F65C52;
+        border: none;
+        border-radius: .3em;
+        font-weight: bold;
+        }
+
+        .event-button-edit{
+        color: white;
+        background-color: #56CCF2;
+        border: none;
+        border-radius: .3em;
+        font-weight: bold;
+        }
+
 
 
         .toggle {
@@ -364,7 +435,7 @@
         {% endfor %}
     </div>
 
-    <div id="wrapper">
+<!--     <div id="wrapper">
         <form id="paper" method="get" action="">
             <div id="margin">Title: <input id="title" type="text" name="title"></div>
             <textarea placeholder="Plan for your event!" id="text" name="text" rows="4"
@@ -372,7 +443,43 @@
             <br>
             <input id="button" type="submit" value="Create">
         </form>
+    </div> -->
+    
+    
+    <div>
+        <section class="event-container">
+            <div class="event-row">
+            <span class="event-item event-name"> Ultimate Frisbee</span>
+            <span class="event-item event-date"> 21/05/23 </span>
+            <span class="event-item event-time"> 14:00-16:00</span>
+            <span><button class="event-button event-button-edit" type="button" >Edit</button></span>
+            <span><button class="event-button event-button-delete" type="button">Delete</button></span>
+            </div>
+
+            <div class="event-row">
+            <span class="event-item event-name"> This is an incredibly verbose and long event name</span>
+            <span class="event-item event-date"> 21/05/23 </span>
+            <span class="event-item event-time"> 14:00-16:00</span>
+            <span><button class="event-button event-button-edit" type="button" >Edit</button></span>
+            <span><button class="event-button event-button-delete" type="button">Delete</button></span>
+            </div>
+            <div class="event-row">
+            <span class="event-item event-name"> Event 3</span>
+            <span class="event-item event-date"> 21/05/23 </span>
+            <span class="event-item event-time"> 14:00-16:00</span>
+            <span><button class="event-button event-button-edit" type="button" >Edit</button></span>
+            <span><button class="event-button event-button-delete" type="button">Delete</button></span>
+            </div>
+            <div class="event-row">
+            <span class="event-item event-name"> Event 4</span>
+            <span class="event-item event-date"> 21/05/23 </span>
+            <span class="event-item event-time"> 14:00-16:00</span>
+            <span><button class="event-button event-button-edit" type="button" >Edit</button></span>
+            <span><button class="event-button event-button-delete" type="button">Delete</button></span>
+            </div>
+        </section>
     </div>
+
 
     <div class="sticky-nav">
         <a href="/"><i class="fas fa-home"></i> Home</a>
