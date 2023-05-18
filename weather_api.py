@@ -61,8 +61,19 @@ def get_location_list():
         location_list.append({'name': name, 'id': id, 'latitude': latitude, 'longitude': longitude})
     return location_list
 
-
-
+def get_nearest_site_id(latitude, longitude):
+    # This function returns the ID of the neareset weather site from the given coordinates
+    # Example: get_nearest_site_id(52.21097235154088, 0.09139787817833253)
+    # This returns 310042, as this is the ID of Cambridge site, which is nearest.
+    nearest_distance = 1E69
+    nearest_id = -1
+    sites = requests.get(f"http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/sitelist?key={api_key}").json()['Locations']['Location']
+    for site in sites:
+        distance = ((latitude - float(site['latitude'])) ** 2 + (longitude - float(site['longitude'])) ** 2) ** 0.5
+        if distance < nearest_distance:
+            nearest_distance = distance
+            nearest_id = site['id']
+    return nearest_id
 
 def get_future_day_location_forecast(location_id, target_date):
     base_url = "http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/"
