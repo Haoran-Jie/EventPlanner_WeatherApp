@@ -128,11 +128,17 @@ def check_requirements():
     longitude = data['longitude']
     selected_weather = data['selectedWeather']
 
-    location_id = weather_api.get_nearest_site_id(latitude,longitude)
-    print(location_id)
+    location_id = weather_api.get_nearest_site_id(latitude, longitude)
+    print(location_id)  # 353464
     print(selected_weather)
     # Call your backend function to check the requirements and get the result
     result = [True, False, True, True, False]
 
-    # Return the result as a JSON response
-    return jsonify(result)
+    # Create the response JSON object
+    response = {
+        'locationId': location_id,
+        'result': result
+    }
+
+    # Return the response as a JSON
+    return jsonify(response)

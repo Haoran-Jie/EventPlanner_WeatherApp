@@ -104,26 +104,32 @@
 <body style="height: 150vh;">
   <h1>Desired Weather</h1>
   <div>
-    <button class="button" data-clicked="false" onclick="filterWeather('sun'); showClicked(this)">
+    <button class="button" data-clicked="false" data-weather-type="sun"
+      onclick="filterWeather('sun'); showClicked(this)">
       <img class="icon" src="https://cdn-icons-png.flaticon.com/512/831/831682.png" width="80" height="80">
       <p> Sunny </p>
     </button>
-    <button class="button" data-clicked="false" onclick="filterWeather('rainy'); showClicked(this)">
+    <button class="button" data-clicked="false" data-weather-type="rainy"
+      onclick="filterWeather('rainy'); showClicked(this)">
       <img class="icon" src="https://cdn-icons-png.flaticon.com/512/1779/1779907.png" width="80" height="80">
       <p> Rainy </p>
     </button>
-    <button class="button" onclick="filterWeather('cloudy'); showClicked(this)" data-clicked="false">
+    <button class="button" data-clicked="false" data-weather-type="cloudy"
+      onclick="filterWeather('cloudy'); showClicked(this)">
       <img class="icon" src="https://cdn-icons-png.flaticon.com/512/4343/4343597.png" width="80" height="80">
       <p> Cloudy </p>
     </button>
-    <button class="button" data-clicked="false" onclick="filterWeather('snow'); showClicked(this)">
+    <button class="button" data-clicked="false" data-weather-type="snow"
+      onclick="filterWeather('snow'); showClicked(this)">
       <img class="icon" src="https://cdn-icons-png.flaticon.com/512/8675/8675121.png" width="80" height="80">
       <p> Snow </p>
     </button>
-    <button class="button" data-clicked="false" onclick="filterWeather('wind'); showClicked(this)">
+    <button class="button" data-clicked="false" data-weather-type="wind"
+      onclick="filterWeather('wind'); showClicked(this)">
       <img class="icon" src="https://cdn-icons-png.flaticon.com/512/4005/4005837.png" width="80" height="80">
       <p> Wind </p>
     </button>
+
   </div>
 
   <div id="weather-container">
@@ -257,7 +263,7 @@
     }
 
 
-    function updateCardColors(satisfiedRequirements) {
+    function updateCardColorsAndRedirect(satisfiedRequirements, locationId) {
       var cards = document.getElementsByClassName('weather-card');
 
       for (var i = 0; i < cards.length; i++) {
@@ -269,6 +275,13 @@
         } else {
           card.style.backgroundColor = 'red';
         }
+
+        // Add click event listener to each card
+        card.addEventListener('click', function () {
+          // Redirect to the forecast link with the locationId and card index
+          var cardIndex = Array.prototype.indexOf.call(cards, this);
+          window.location.href = '/forecast/' + locationId + '/' + (cardIndex + 1);
+        });
       }
     }
 
@@ -323,10 +336,29 @@
       var selectedWeather = getSelectedWeather();
 
       // Call your JavaScript function and pass the latitude, longitude, and selected weather
-      var satisfiedRequirements = checkRequirements(lngLat.lat, lngLat.lng, selectedWeather);
-
-      // Update the weather cards' colors based on the satisfied requirements
-      updateCardColors(satisfiedRequirements);
+      fetch('/check-requirements', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          latitude: lngLat.lat,
+          longitude: lngLat.lng,
+          selectedWeather: selectedWeather
+        })
+      })
+        .then(function (response) {
+          // Parse the JSON response
+          return response.json();
+        })
+        .then(function (result) {
+          // Process the result received from the backend
+          updateCardColorsAndRedirect(result.result, result.locationId);
+        })
+        .catch(function (error) {
+          // Handle any errors that occurred during the request
+          console.error('Error:', error);
+        });
     }
   </script>
 </body>
