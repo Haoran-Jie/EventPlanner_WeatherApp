@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template,request
 import weather_api
 
 app = Flask(__name__)
@@ -105,3 +105,16 @@ def forecast(location_id, days_in_future):
         weather_icon_map=weather_icon_map,
         location=location,
     )
+
+
+@app.route("/set-location", methods=["POST"])
+def set_location():
+    latitude = request.form.get("latitude")
+    longitude = request.form.get("longitude")
+
+    print(latitude)
+    print(longitude)
+    # Process the magnitude and longitude data as needed
+    # Save the data to your backend or perform any other operations
+    
+    return "Location data received and processed successfully"
