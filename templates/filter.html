@@ -169,12 +169,13 @@
 
     // Weather data for each day
     var weatherData = [
-      { date: moment().format("DD-MM"), hour: "12:00", temperature: 22, weatherType: "sun", humidity: 60 },
-      { date: moment().add(1, 'days').format("DD-MM"), hour: "12:00", temperature: 18, weatherType: "cloudy", humidity: 75 },
-      { date: moment().add(2, 'days').format("DD-MM"), hour: "12:00", temperature: 15, weatherType: "rainy", humidity: 80 },
-      { date: moment().add(3, 'days').format("DD-MM"), hour: "12:00", temperature: 10, weatherType: "snow", humidity: 90 },
-      { date: moment().add(4, 'days').format("DD-MM"), hour: "12:00", temperature: 20, weatherType: "wind", humidity: 70 }
+      { date: moment().format("DD-MM") },
+      { date: moment().add(1, 'days').format("DD-MM") },
+      { date: moment().add(2, 'days').format("DD-MM") },
+      { date: moment().add(3, 'days').format("DD-MM") },
+      { date: moment().add(4, 'days').format("DD-MM") }
     ];
+
 
     var weatherContainer = document.getElementById('weather-container');
 
@@ -184,29 +185,12 @@
       card.classList.add('weather-card');
 
       var date = document.createElement('h2');
-      date.textContent = data.date + ' ' + data.hour;
-
-      var temperature = document.createElement('p');
-      temperature.textContent = data.temperature + '°C';
-
-      var weatherIcon = document.createElement('i');
-      weatherIcon.classList.add('icon', 'text-' + data.weatherType);
-      weatherIcon.className = getWeatherIconClass(data.weatherType);
-
-      var weatherType = document.createElement('p');
-      weatherType.textContent = getWeatherTypeName(data.weatherType);
-
-      var humidity = document.createElement('p');
-      humidity.textContent = 'Humidity: ' + data.humidity + '%';
+      date.textContent = data.date;
 
       card.appendChild(date);
-      card.appendChild(temperature);
-      card.appendChild(weatherIcon);
-      card.appendChild(weatherType);
-      card.appendChild(humidity);
-
       weatherContainer.appendChild(card);
     });
+
 
     function getWeatherIconClass(weatherType) {
       var weatherIconMap = {

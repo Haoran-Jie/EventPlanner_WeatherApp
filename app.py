@@ -99,25 +99,18 @@ def forecast(location_id, days_in_future):
     for i in location_list:
         if i["id"] == str(location_id):
             location = i["name"]
+            latitude = i["latitude"]
+            longitude = i["longitude"]
+
     return render_template(
-        "home.html",
+        "forecast.html",
         weather_data=weather_data,
         weather_icon_map=weather_icon_map,
         location=location,
+        latitude = latitude,
+        longitude = longitude
     )
 
-
-@app.route("/set-location", methods=["POST"])
-def set_location():
-    latitude = request.form.get("latitude")
-    longitude = request.form.get("longitude")
-
-    print(latitude)
-    print(longitude)
-    # Process the magnitude and longitude data as needed
-    # Save the data to your backend or perform any other operations
-    
-    return "Location data received and processed successfully"
 
 
 @app.route('/check-requirements', methods=['POST'])
@@ -132,7 +125,7 @@ def check_requirements():
     print(location_id)  # 353464
     print(selected_weather)
     # Call your backend function to check the requirements and get the result
-    result = [True, False, True, True, False]
+    result = weather_api.get_upcoming_days_suitable(location_id,-10,20,selected_weather)
 
     # Create the response JSON object
     response = {

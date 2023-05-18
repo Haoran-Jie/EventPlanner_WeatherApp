@@ -1,33 +1,10 @@
 <!DOCTYPE html>
 <html>
 
-
-
 <head>
-
     <meta charset="UTF-8">
     <title>Weather App - Cambridge</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-<!--            <script src="edit_planned_events.js" async></script>-->
-
-    <script>
-
-        var removeEvents = document.getElementsByClassName('event-button-delete');
-    for (var i = 0; i < removeEvents.length; i++) {
-        var button = removeEvents[i];
-        button.addEventListener('click', removePlannedEvent);
-        console.log("Hello");
-    }
-
-    function removePlannedEvent(event) {
-        var buttonClicked = event.target;
-        buttonClicked.parentElement.remove();
-        console.log("Click");
-    }
-
-    </script>
-
-
     <style>
         @keyframes gradient {
             0% {
@@ -71,7 +48,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-<!--            background-image: url("https://static.tumblr.com/maopbtg/G02mgtolz/map-overlay.png");-->
+            background-image: url("https://static.tumblr.com/maopbtg/G02mgtolz/map-overlay.png");
             opacity: 0.1;
         }
 
@@ -155,77 +132,6 @@
         .card-text {
             font-family: Georgia, 'Times New Roman', Times, serif;
         }
-
-
-
-        .event-row {
-        border-bottom: 1px solid black;
-        padding-bottom: 1em;
-        margin-bottom: 1em;
-        }
-
-        .event-row:last-child {
-            border: none;
-            margin-bottom: 0em;
-        }
-
-        .event-container{
-         border-width:3px;
-         border-style:solid;
-         border-color:#D8DED7;
-         background: #F8FEF7;
-         border-radius: 5px;
-        width: 1000px;
-        margin: 0 auto;
-        padding: 0 1.5em;
-        margin-bottom: 5em;
-        margin-top: 2em;
-        }
-        .event-item{
-        display:inline-block;
-        padding-right:.5em;
-        font-family: Georgia, 'Times New Roman', Times, serif;
-        font-size: 1.3em;
-
-        padding-right: .5em;
-        }
-
-        .event-name{
-        width: 40%;
-        }
-
-        .event-time{
-        width: 20%;
-        }
-        .event-day{
-        width: 25%;
-        }
-
-        .event-button{
-        max-width: 19%;
-        font-size: 20px;
-        }
-
-        .event-button-delete:hover{
-            background-color: #F65C5299;
-        }
-
-        .event-button-delete{
-        color: white;
-        background-color: #F65C52;
-        border: none;
-        border-radius: .3em;
-        font-weight: bold;
-        }
-
-        .event-button-edit{
-        color: white;
-        background-color: #56CCF2;
-        border: none;
-        border-radius: .3em;
-        font-weight: bold;
-        }
-
 
 
         .toggle {
@@ -432,7 +338,6 @@
     </style>
 </head>
 
-
 <body>
     <h1 class="header">{{location}}</h1>
     <div id="map-container">
@@ -459,52 +364,23 @@
         {% endfor %}
     </div>
 
-<div>
-        <section class="event-container">
-            <div class="event-row">
-            <span class="event-item event-name"> Ultimate Frisbee</span>
-            <span class="event-item event-date"> 21/05/23 </span>
-            <span class="event-item event-time"> 14:00-16:00</span>
-            <span><button class="event-button event-button-edit" type="button" >Edit</button></span>
-            <span><button class="event-button event-button-delete" type="button">Delete</button></span>
-            </div>
-
-            <div class="event-row">
-            <span class="event-item event-name"> This is an incredibly verbose and long event name</span>
-            <span class="event-item event-date"> 21/05/23 </span>
-            <span class="event-item event-time"> 14:00-16:00</span>
-            <span><button class="event-button event-button-edit" type="button" >Edit</button></span>
-            <span><button class="event-button event-button-delete" type="button">Delete</button></span>
-            </div>
-            <div class="event-row">
-            <span class="event-item event-name"> Event 3</span>
-            <span class="event-item event-date"> 21/05/23 </span>
-            <span class="event-item event-time"> 14:00-16:00</span>
-            <span><button class="event-button event-button-edit" type="button" >Edit</button></span>
-            <span><button class="event-button event-button-delete" type="button">Delete</button></span>
-            </div>
-            <div class="event-row">
-            <span class="event-item event-name"> Event 4</span>
-            <span class="event-item event-date"> 21/05/23 </span>
-            <span class="event-item event-time"> 14:00-16:00</span>
-            <span><button class="event-button event-button-edit" type="button" >Edit</button></span>
-            <span><button class="event-button event-button-delete" type="button">Delete</button></span>
-            </div>
-        </section>
+    <div id="wrapper">
+        <form id="paper" method="get" action="">
+            <div id="margin">Title: <input id="title" type="text" name="title"></div>
+            <textarea placeholder="Plan for your event!" id="text" name="text" rows="4"
+                style="overflow: hidden; word-wrap: break-word; resize: none; height: 160px;"></textarea>
+            <br>
+            <input id="button" type="submit" value="Create">
+        </form>
     </div>
-
-
 
     <div class="sticky-nav">
         <a href="/"><i class="fas fa-home"></i> Home</a>
         <a href="/filter"><i class="fas fa-tasks"></i> Plan</a>
         <a href="/setting"><i class="fas fa-cog"></i> Settings</a>
     </div>
-
-
-
+    
     <!-- Include Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.js"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.5.1/mapbox-gl.css" rel="stylesheet" />
@@ -534,8 +410,10 @@
     <script>
         // Replace YOUR_ACCESS_TOKEN with your actual Mapbox access token
         mapboxgl.accessToken = 'pk.eyJ1IjoiamlhaGJvcmNuIiwiYSI6ImNsaHM3M2QzeDA4N2kzZXFnaWc5ZGU4ZGUifQ.coG9goefWIKJ8Xb1Seh3_Q';
-        var longitude = 0.0917;
-        var latitude = 52.2109;
+        // var longitude = 0.0917;
+        // var latitude = 52.2109;
+        var longitude = {{longitude}};
+        var latitude = {{latitude}};
         // Create a new map instance
         var map = new mapboxgl.Map({
             container: 'map', // ID of the map container div

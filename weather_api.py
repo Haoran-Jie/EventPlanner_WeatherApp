@@ -187,4 +187,6 @@ def get_upcoming_days_suitable(location_id, min_temp, max_temp, weather_types):
         suitable_days.append(any([(datetime.date.today() + datetime.timedelta(days=i)).strftime("%Y-%m-%dZ") == dt[0] for dt in suitable_datetimes]))
     return suitable_days
 
-print(get_upcoming_days_suitable(350731, 0, 10, ["sunny", "cloudy"]))
+
+if __name__ == "__main__":
+    print(get_upcoming_days_suitable(350731, 0, 10, ["sunny", "cloudy"]))
