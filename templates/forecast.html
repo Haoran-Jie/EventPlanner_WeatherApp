@@ -56,7 +56,8 @@
             justify-content: center;
             align-items: center;
             height: 170vh;
-            background: linear-gradient(45deg, #85FFBD, #FFFB7D, #FF85E5);
+            background: linear-gradient(45deg, #85FFBD, #FFFB7D, #FF85E5); 
+            /* Dynamic gradient for the background */
             background-size: 200% 200%;
             animation: gradient 5s ease infinite;
             font-family: Arial, sans-serif;
@@ -69,13 +70,15 @@
             font-family: 'Times New Roman', Times, serif;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
             background: linear-gradient(45deg, #f83a3a 10%, #f13dd4 50%, #7000ff 90%);
+            /* gradient colour for heading */
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .weather-card {
             display: flex;
-            flex-direction: column;
+            flex-direction: column; 
+            /* Hence the cards are placed horizontally */
             justify-content: center;
             align-items: center;
             margin: 10px;
@@ -90,12 +93,11 @@
             overflow-y: hidden;
         }
 
-
+        /* hover effect for weather cards */
         .weather-card:hover {
             transform: scale(1.05);
             background-color: rgba(255, 255, 255, 0.9);
             border: 1px solid #333;
-
         }
 
         .weather-card:hover h2,
@@ -261,6 +263,7 @@
             font-family: Georgia, 'Times New Roman', Times, serif;
         }
 
+        /* inspired by codepen */
         #text {
             width: 500px;
             overflow: hidden;
@@ -344,8 +347,8 @@
         <input type="checkbox" id="toggle-temperature" checked>
         <label for="toggle-temperature" data-label="°C"></label>
     </div>
+    <!-- Weather cards -->
     <div id="weather-container">
-        <!-- Weather cards will be added here by Jinja2 -->
         {% for item in weather_data %}
         <div class="weather-card card">
             <div class="card-body">
@@ -358,7 +361,7 @@
         </div>
         {% endfor %}
     </div>
-
+    <!-- Plan event note area -->
     <div id="wrapper">
         <form id="paper" method="get" action="">
             <div id="margin">Title: <input id="title" type="text" name="title"></div>
@@ -368,7 +371,7 @@
             <input id="button" type="submit" value="Create">
         </form>
     </div>
-
+    <!-- The navigation bar, common for every page -->
     <div class="sticky-nav">
         <a href="/"><i class="fas fa-home"></i> Home</a>
         <a href="/filter"><i class="fas fa-tasks"></i> Plan</a>
@@ -383,7 +386,7 @@
         const toggleTemperature = document.getElementById('toggle-temperature');
         const temperatureElements = document.querySelectorAll('.temperature');
         const toggleLabel = document.querySelector('.toggle label');
-
+        // logic for changing between celsius and farenheit
         toggleTemperature.addEventListener('change', function () {
             if (this.checked) {
                 temperatureElements.forEach(function (element) {
@@ -403,7 +406,6 @@
         });
     </script>
     <script>
-        // Replace YOUR_ACCESS_TOKEN with your actual Mapbox access token
         mapboxgl.accessToken = 'pk.eyJ1IjoiamlhaGJvcmNuIiwiYSI6ImNsaHM3M2QzeDA4N2kzZXFnaWc5ZGU4ZGUifQ.coG9goefWIKJ8Xb1Seh3_Q';
         // var longitude = 0.0917;
         // var latitude = 52.2109;

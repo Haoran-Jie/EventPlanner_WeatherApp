@@ -184,7 +184,7 @@
       marker.setLngLat(e.lngLat).addTo(map);
     });
 
-    // Weather data for each day
+    // Weather data for each day, moment allows us to get current day. We can do five days in advance. 
     var weatherData = [
       { date: moment().format("DD-MM") },
       { date: moment().add(1, 'days').format("DD-MM") },

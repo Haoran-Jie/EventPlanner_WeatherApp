@@ -441,7 +441,6 @@
         <label for="toggle-temperature" data-label="°C"></label>
     </div>
     <div id="weather-container">
-        <!-- Weather cards will be added here by Jinja2 -->
         {% for item in weather_data %}
         <div class="weather-card card">
             <div class="card-body">
@@ -528,14 +527,13 @@
         });
     </script>
     <script>
-        // Replace YOUR_ACCESS_TOKEN with your actual Mapbox access token
         mapboxgl.accessToken = 'pk.eyJ1IjoiamlhaGJvcmNuIiwiYSI6ImNsaHM3M2QzeDA4N2kzZXFnaWc5ZGU4ZGUifQ.coG9goefWIKJ8Xb1Seh3_Q';
         var longitude = 0.0917;
         var latitude = 52.2109;
         // Create a new map instance
         var map = new mapboxgl.Map({
             container: 'map', // ID of the map container div
-            style: 'mapbox://styles/mapbox/streets-v11', // Mapbox style URL
+            style: 'mapbox://styles/mapbox/streets-v11', 
             center: [longitude, latitude], // Longitude and latitude of the location
             zoom: 12 // Initial zoom level
         });
