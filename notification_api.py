@@ -4,9 +4,9 @@ from email.message import EmailMessage
 def send_email():
     port = 465  # For SSL
     smtp_server = "smtp.gmail.com"
-    sender_email = "davidcomputer114@gmail.com"  
-    receiver_email = "davidcomputer114@gmail.com"  
-    password = "avzuyrwosewmelkl"
+    sender_email = "davidcomputer114@gmail.com"  #dummy email for testing
+    receiver_email = "davidcomputer114@gmail.com"  #dummy email for testing
+    password = "avzuyrwosewmelkl" #Google app password
 
     msg = EmailMessage()
     msg.set_content("The weather has changed for an event that you are planning.\n"
