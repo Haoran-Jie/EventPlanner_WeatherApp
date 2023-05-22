@@ -1,5 +1,5 @@
-from flask import Flask, render_template
-import weather_api
+from flask import Flask, render_template, request, url_for, flash, redirect
+import weather_api, notification_api
 
 app = Flask(__name__)
 
@@ -87,8 +87,16 @@ def event_planning():
 def setting():
     # Logic to handle GPS opening/closing
     # Render the settle template
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        return render_template('setting.html', name=name, email=email)
     return render_template("setting.html")
 
+@app.route("/weather_change", methods=["POST"])
+def weather_change():
+    notification_api.send_email()
+    return redirect("/setting")
 
 @app.route("/forecast/<int:location_id>/<int:days_in_future>")
 def forecast(location_id, days_in_future):
