@@ -1,128 +1,121 @@
 <!DOCTYPE html>
 <html>
 
-
-
 <head>
-
-
-
-
     <meta charset="UTF-8">
     <title>Weather App - Cambridge</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-<!--            <script src="edit_planned_events.js" async></script>-->
-
     <script>
-if (document.readyState == 'loading') {
-    document.addEventListener('DOMContentLoaded', ready)
-} else {
-    ready();
-}
+        if (document.readyState == 'loading') {
+            document.addEventListener('DOMContentLoaded', ready)
+        } else {
+            ready();
+        }
 
-function initEvents(){
-console.log("FIRST LINE INIT")
-  function retrieveEvents() {
-  console.log(localStorage.getItem('Events'));
-  var itemsString = localStorage.getItem('Events');
-  if (itemsString === ""){
-  return JSON.parse('[]');
-  }
-  if (itemsString !== null) {
-    return JSON.parse(itemsString);
-  } else {
-      return JSON.parse('[]');
+        function initEvents() {
+            console.log("FIRST LINE INIT")
+            function retrieveEvents() {
+                console.log(localStorage.getItem('Events'));
+                var itemsString = localStorage.getItem('Events');
+                if (itemsString === "") {
+                    return JSON.parse('[]');
+                }
+                if (itemsString !== null) {
+                    return JSON.parse(itemsString);
+                } else {
+                    return JSON.parse('[]');
 
-    }
-  }
+                }
+            }
 
-    function removePlannedEvent(event) {
-    var buttonClicked = event.target;
-      var eventRow = buttonClicked.parentElement.parentElement;
+            function removePlannedEvent(event) {
+                var buttonClicked = event.target;
+                var eventRow = buttonClicked.parentElement.parentElement;
 
-      var eventName = eventRow.querySelector(".event-name").textContent;
-      var eventTime = eventRow.querySelector(".event-time").textContent;
+                var eventName = eventRow.querySelector(".event-name").textContent;
+                var eventTime = eventRow.querySelector(".event-time").textContent;
 
-      var timeParts = eventTime.split("-");
-      var startHour = parseInt(timeParts[0].split(":")[0]);
-      var endHour = parseInt(timeParts[1].split(":")[0]);
+                var timeParts = eventTime.split("-");
+                var startHour = parseInt(timeParts[0].split(":")[0]);
+                var endHour = parseInt(timeParts[1].split(":")[0]);
 
-        console.log("THE VALS")
-      console.log(startHour);
-      console.log(endHour);
-      console.log(eventName);
-      var allEvents = retrieveEvents();
+                console.log("THE VALS")
+                console.log(startHour);
+                console.log(endHour);
+                console.log(eventName);
+                var allEvents = retrieveEvents();
 
 
-      for (var i = 0; i < allEvents.length; i++){
-      console.log(allEvents[i].name)
-      console.log((allEvents[i].name === eventName))
-      console.log((allEvents[i].startTime === startHour))
-      console.log(allEvents[i].endTime === endHour)
-      if ((allEvents[i].name === eventName) && (allEvents[i].startTime === startHour) && (allEvents[i].endTime === endHour)){
-        console.log(allEvents[i])
-        console.log("FOUND IT")
-        allEvents.splice(i, i+1);
-        console.log(allEvents);
-        localStorage.setItem('Events', JSON.stringify(allEvents));
-        break;
-      }
-      }
-    buttonClicked.parentElement.parentElement.parentElement.remove();
-    if (allEvents.length === 0){
-    zeroEvents();
-    console.log("Click");}
-    }
+                for (var i = 0; i < allEvents.length; i++) {
+                    console.log(allEvents[i].name)
+                    console.log((allEvents[i].name === eventName))
+                    console.log((allEvents[i].startTime === startHour))
+                    console.log(allEvents[i].endTime === endHour)
+                    if ((allEvents[i].name === eventName) && (allEvents[i].startTime === startHour) && (allEvents[i].endTime === endHour)) {
+                        console.log(allEvents[i])
+                        console.log("FOUND IT")
+                        allEvents.splice(i, i + 1);
+                        console.log(allEvents);
+                        localStorage.setItem('Events', JSON.stringify(allEvents));
+                        break;
+                    }
+                }
+                buttonClicked.parentElement.parentElement.parentElement.remove();
+                if (allEvents.length === 0) {
+                    zeroEvents();
+                    console.log("Click");
+                }
+            }
 
-  function zeroEvents(){
-  var eventRow = document.createElement('div');
-  var eventRowContents = `
+            function zeroEvents() {
+                var eventRow = document.createElement('div');
+                var eventRowContents = `
             <div class="event-row">
             <span class="event-item"> No Events. Go to planning page to plan an event</span>
             </div>`
-  eventRow.innerHTML = eventRowContents
-  eventItems.append(eventRow)
-    }
+                eventRow.innerHTML = eventRowContents
+                eventItems.append(eventRow)
+            }
 
 
-  var allEvents = retrieveEvents();
-  console.log(allEvents)
-    var eventItems = document.getElementsByClassName('event-container')[0]
+            var allEvents = retrieveEvents();
+            console.log(allEvents)
+            var eventItems = document.getElementsByClassName('event-container')[0]
 
-  if (allEvents.length === 0){
-    zeroEvents()
-  }
+            if (allEvents.length === 0) {
+                zeroEvents()
+            }
 
-    var d = new Date();
-  for (var i = 0; i < allEvents.length; i++){
-    var eventRow = document.createElement('div');
-    eventRow.classList.add('event-row')
-    var eventRowContents = `
+            var d = new Date();
+            for (var i = 0; i < allEvents.length; i++) {
+                var eventRow = document.createElement('div');
+                eventRow.classList.add('event-row')
+                var eventRowContents = `
             <div class="event-row">
             <span class="event-item event-name">${allEvents[i].name}</span>
             <span class="event-item event-date"> ${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}</span>
             <span class="event-item event-time">${allEvents[i].startTime}:00-${allEvents[i].endTime}:00</span>
             <span><button class="event-button event-button-delete" type="button">Delete</button></span>
             </div>`
-    eventRow.innerHTML = eventRowContents
-    eventItems.append(eventRow)
-    eventRow.getElementsByClassName('event-button-delete')[0].addEventListener('click', removePlannedEvent)
-  }
+                eventRow.innerHTML = eventRowContents
+                eventItems.append(eventRow)
+                eventRow.getElementsByClassName('event-button-delete')[0].addEventListener('click', removePlannedEvent)
+            }
 
 
 
-}
+        }
 
-function ready(){
-    console.log("READY")
-    console.log("Before Init is called")
-    initEvents();
-    console.log("INIT")
-    console.log("2");
+        function ready() {
+            console.log("READY")
+            console.log("Before Init is called")
+            initEvents();
+            console.log("INIT")
+            console.log("2");
 
-}
+        }
 
-</script>
+    </script>
 
 
 
@@ -169,11 +162,9 @@ function ready(){
             left: 0;
             right: 0;
             bottom: 0;
-<!--            background-image: url("https://static.tumblr.com/maopbtg/G02mgtolz/map-overlay.png");-->
-            opacity: 0.1;
         }
 
-    body {
+        body {
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -255,9 +246,9 @@ function ready(){
 
 
         .event-row {
-        border-bottom: 1px solid black;
-        padding-bottom: 1em;
-        margin-bottom: 1em;
+            border-bottom: 1px solid black;
+            padding-bottom: 1em;
+            margin-bottom: 1em;
         }
 
         .event-row:last-child {
@@ -265,53 +256,55 @@ function ready(){
             margin-bottom: 0em;
         }
 
-        .event-container{
-         border-width:3px;
-         border-style:solid;
-         border-color:#D8DED7;
-         background: #F8FEF7;
-         border-radius: 5px;
-        width: 1000px;
-        margin: 0 auto;
-        padding: 0 1.5em;
-        margin-bottom: 5em;
+        .event-container {
+            border-width: 3px;
+            border-style: solid;
+            border-color: #D8DED7;
+            background: #F8FEF7;
+            border-radius: 5px;
+            width: 1000px;
+            margin: 0 auto;
+            padding: 0 1.5em;
+            margin-bottom: 5em;
 
         }
-        .event-item{
-        display:inline-block;
-        padding-right:.5em;
-        font-family: Georgia, 'Times New Roman', Times, serif;
-        font-size: 1.3em;
 
-        padding-right: .5em;
+        .event-item {
+            display: inline-block;
+            padding-right: .5em;
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            font-size: 1.3em;
+
+            padding-right: .5em;
         }
 
-        .event-name{
-        width: 40%;
+        .event-name {
+            width: 40%;
         }
 
-        .event-time{
-        width: 20%;
-        }
-        .event-day{
-        width: 25%;
+        .event-time {
+            width: 20%;
         }
 
-        .event-button{
-        max-width: 19%;
-        font-size: 20px;
+        .event-day {
+            width: 25%;
         }
 
-        .event-button-delete:hover{
+        .event-button {
+            max-width: 19%;
+            font-size: 20px;
+        }
+
+        .event-button-delete:hover {
             background-color: #F65C5299;
         }
 
-        .event-button-delete{
-        color: white;
-        background-color: #F65C52;
-        border: none;
-        border-radius: .3em;
-        font-weight: bold;
+        .event-button-delete {
+            color: white;
+            background-color: #F65C52;
+            border: none;
+            border-radius: .3em;
+            font-weight: bold;
         }
 
 
@@ -546,7 +539,7 @@ function ready(){
         {% endfor %}
     </div>
 
-<div>
+    <div>
         <section class="event-container">
         </section>
     </div>
@@ -596,7 +589,7 @@ function ready(){
         // Create a new map instance
         var map = new mapboxgl.Map({
             container: 'map', // ID of the map container div
-            style: 'mapbox://styles/mapbox/streets-v11', 
+            style: 'mapbox://styles/mapbox/streets-v11',
             center: [longitude, latitude], // Longitude and latitude of the location
             zoom: 12 // Initial zoom level
         });
