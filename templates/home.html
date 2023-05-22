@@ -78,7 +78,7 @@ console.log("FIRST LINE INIT")
   var eventRow = document.createElement('div');
   var eventRowContents = `
             <div class="event-row">
-            <span class="event-item" text-align:"center"> No Events. Go to planning page to plan an event</span>
+            <span class="event-item"> No Events. Go to planning page to plan an event</span>
             </div>`
   eventRow.innerHTML = eventRowContents
   eventItems.append(eventRow)
@@ -92,15 +92,15 @@ console.log("FIRST LINE INIT")
   if (allEvents.length === 0){
     zeroEvents()
   }
-  vad d = new Date();
-  console.log(d);
+
+    var d = new Date();
   for (var i = 0; i < allEvents.length; i++){
     var eventRow = document.createElement('div');
     eventRow.classList.add('event-row')
     var eventRowContents = `
             <div class="event-row">
             <span class="event-item event-name">${allEvents[i].name}</span>
-            <span class="event-item event-day">Hello${d.getDate() + 10}/${d.getMonth()}/${d.getFullYear()}</span>
+            <span class="event-item event-date"> ${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}</span>
             <span class="event-item event-time">${allEvents[i].startTime}:00-${allEvents[i].endTime}:00</span>
             <span><button class="event-button event-button-delete" type="button">Delete</button></span>
             </div>`
@@ -373,6 +373,8 @@ function ready(){
             left: 4px;
         }
 
+
+
         .temperature {
             display: inline-block;
             margin-left: 5px;
@@ -606,7 +608,6 @@ function ready(){
             .setLngLat([longitude, latitude])
             .addTo(map);
     </script>
-
 
 </body>
 
