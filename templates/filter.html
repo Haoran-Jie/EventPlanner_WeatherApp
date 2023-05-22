@@ -71,11 +71,14 @@ https://stackoverflow.com/questions/42389401/html5-input-type-range-with-min-val
       font-size: 14px;
       font-weight: bold;
       transition: font-size 0.5s ease, color 0.3s ease;
+        /* Navigation bar at the bottom of the screen: home, plan, setting button */
+
     }
 
     .sticky-nav a:hover {
       color: rgb(38, 177, 195);
       font-size: 18px;
+      /* change the style of button when mouse hovers over the navigation button */
     }
 
     #map {
@@ -183,27 +186,29 @@ https://stackoverflow.com/questions/42389401/html5-input-type-range-with-min-val
   <h1>Desired Weather</h1>
   <div>
     <button class="button" data-clicked="false" data-weather-type="sun"
-      onclick="filterWeather('sun'); showClicked(this)">
+      onclick="showClicked(this)">
+      <!-- need to specify the data-weather type to use later for the filter  -->
+      <!-- implement showclicked in javascript: change font, background when click the button -->
       <img class="icon" src="https://cdn-icons-png.flaticon.com/512/831/831682.png" width="80" height="80">
       <p> Sunny </p>
     </button>
     <button class="button" data-clicked="false" data-weather-type="rainy"
-      onclick="filterWeather('rainy'); showClicked(this)">
+      onclick="showClicked(this)">
       <img class="icon" src="https://cdn-icons-png.flaticon.com/512/1779/1779907.png" width="80" height="80">
       <p> Rainy </p>
     </button>
     <button class="button" data-clicked="false" data-weather-type="cloudy"
-      onclick="filterWeather('cloudy'); showClicked(this)">
+      onclick="showClicked(this)">
       <img class="icon" src="https://cdn-icons-png.flaticon.com/512/4343/4343597.png" width="80" height="80">
       <p> Cloudy </p>
     </button>
     <button class="button" data-clicked="false" data-weather-type="snow"
-      onclick="filterWeather('snow'); showClicked(this)">
+      onclick="showClicked(this)">
       <img class="icon" src="https://cdn-icons-png.flaticon.com/512/8675/8675121.png" width="80" height="80">
       <p> Snow </p>
     </button>
     <button class="button" data-clicked="false" data-weather-type="wind"
-      onclick="filterWeather('wind'); showClicked(this)">
+      onclick="showClicked(this)">
       <img class="icon" src="https://cdn-icons-png.flaticon.com/512/4005/4005837.png" width="80" height="80">
       <p> Wind </p>
     </button>
@@ -221,40 +226,41 @@ https://stackoverflow.com/questions/42389401/html5-input-type-range-with-min-val
   <button id="save-button">Save event</button>
 
   <div id="weather-container">
-    <!-- Weather cards will be added here -->
+    <!-- weather cards are added here -->
   </div>
 
 
 
   <div class="sticky-nav">
     <a href="/"><i class="fas fa-home"></i> Home</a>
+    <!-- need to add the import fontawesome link statement up there, icon isn't showing right now -->
     <a href="/filter"><i class="fas fa-tasks"></i> Plan</a>
     <a href="/setting"><i class="fas fa-cog"></i> Settings</a>
   </div>
 
   <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoiamlhaGJvcmNuIiwiYSI6ImNsaHM3M2QzeDA4N2kzZXFnaWc5ZGU4ZGUifQ.coG9goefWIKJ8Xb1Seh3_Q';
-
+       // access token for the map
     var bounds = [
-      [-11.8, 49.6], // Southwest coordinates
-      [1.8, 60.9] // Northeast coordinates
+      [-11.8, 49.6], // minimum, maximum southwest coordinates => limit to the UK
+      [1.8, 60.9] // minimum, maximum northeast coordinates => also limit to the US
     ];
 
     var map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v11',
-      center: [-2.0, 55.4], // Center coordinates of the UK
-      zoom: 5, // Initial zoom level
-      maxBounds: bounds // Restrict the map to the specified bounds
+      center: [-2.0, 55.4],  // UK coordinate center
+      zoom: 5,  // zoom level when the map is opened
+      maxBounds: bounds // make map only show till these parameters
     });
 
     var marker = new mapboxgl.Marker();
+    // this is the pointer on the map that indicates the current position that the user has chosen
 
     map.on('click', function (e) {
       marker.setLngLat(e.lngLat).addTo(map);
     });
-
-    // Weather data for each day
+    // setLngLat: make the marker go to the longitude, langitude value that is clicked on the map
     var weatherData = [
       { date: moment().format("DD-MM") },
       { date: moment().add(1, 'days').format("DD-MM") },
@@ -262,21 +268,23 @@ https://stackoverflow.com/questions/42389401/html5-input-type-range-with-min-val
       { date: moment().add(3, 'days').format("DD-MM") },
       { date: moment().add(4, 'days').format("DD-MM") }
     ];
+    // want to show the weather for the next 5 days => need to make card for each one of these elements in the array
 
 
     var weatherContainer = document.getElementById('weather-container');
 
-    // Add weather cards for each day
-    weatherData.forEach(function (data) {
-      var card = document.createElement('div');
+
+    weatherData.forEach(makeCard) // iterate through the array and make a card for each element in the array
+    function makeCard(data) {
+      var card = document.createElement('div'); // create a new card in the div that's part of the weather card class
       card.classList.add('weather-card');
 
-      var date = document.createElement('h2');
+      var date = document.createElement('h2'); // add the date as the heading for the card in the div
       date.textContent = data.date;
 
-      card.appendChild(date);
-      weatherContainer.appendChild(card);
-    });
+      card.appendChild(date); // add the heading to be part of the card
+      weatherContainer.appendChild(card); // add the card to the container of all the cards
+    };
 
 
 
@@ -348,15 +356,15 @@ sbutton.addEventListener('click', saveToLocalStorage);
     }
 
     function checkRequirements(latitude, longitude, selectedWeather) {
-      // Create the request body
+        // request data based on the location and desired weather passed into the function argument => used to find the dates that satisfy user's location + desired weather request
       var requestData = {
         latitude: latitude,
         longitude: longitude,
         selectedWeather: selectedWeather
       };
 
-      // Send an HTTP POST request to the Flask route
-      fetch('/check-requirements', {
+      // fetching resource from the server backend python file
+       fetch('/check-requirements', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -364,17 +372,10 @@ sbutton.addEventListener('click', saveToLocalStorage);
         body: JSON.stringify(requestData)
       })
         .then(function (response) {
-          // Parse the JSON response
-          return response.json();
+          return response.json(); //parsing JSON result
         })
-        .then(function (result) {
-          // Process the result received from the backend
-          updateCardColors(result);
-        })
-        .catch(function (error) {
-          // Handle any errors that occurred during the request
-          console.error('Error:', error);
-        });
+        .then(updateCardColors(result))
+        ;
     }
 
 
@@ -390,10 +391,10 @@ sbutton.addEventListener('click', saveToLocalStorage);
         } else {
           card.style.backgroundColor = 'red';
         }
+        // change the color of the date card if it is on a date that satisfies the location+weather requirements
 
-        // Add click event listener to each card
         card.addEventListener('click', function () {
-          // Redirect to the forecast link with the locationId and card index
+          // redirect to the home link with the locationId and card index
           var cardIndex = Array.prototype.indexOf.call(cards, this);
           window.location.href = '/forecast/' + locationId + '/' + (cardIndex + 1);
         });
@@ -409,47 +410,33 @@ sbutton.addEventListener('click', saveToLocalStorage);
 
         if (button.dataset.clicked === "true") {
           selectedWeather.push(button.getAttribute('data-weather-type'));
+          // find all the buttons that are pushed, and get the weather type that they specify
         }
       }
+
       return selectedWeather;
     }
 
     function showClicked(button) {
       if (button.dataset.clicked === "true") {
-        button.style.backgroundColor = "white";
+        button.style.backgroundColor = "transparent";
         button.style.fontWeight = "normal";
         button.dataset.clicked = "false";
+        // when the filter button is already clicked, another click should make it return to its normal state
       } else {
         button.style.backgroundColor = "#F0F8FF";
         button.style.fontWeight = "bold";
         button.dataset.clicked = "true";
+        // when the filter button isn't already clicked, a click should indicate that the filter button is clicked (bolden font, change background color)
       }
     }
 
-    function filterWeather(condition) {
-      var weatherItems = document.getElementsByClassName('weather-item');
-      for (var i = 0; i < weatherItems.length; i++) {
-        var item = weatherItems[i];
-        item.style.display = 'none';
-      }
-      var filteredItems = document.getElementsByClassName('weather-' + condition);
-      for (var j = 0; j < filteredItems.length; j++) {
-        var filteredItem = filteredItems[j];
-        filteredItem.style.display = 'block';
-      }
-      var buttons = document.getElementsByClassName('button');
-      for (var k = 0; k < buttons.length; k++) {
-        var button = buttons[k];
-        button.classList.remove('active');
-      }
-      event.target.classList.add('active');
-    }
 
     function checkRequirementsAndUpdate() {
-      var lngLat = marker.getLngLat();
-      var selectedWeather = getSelectedWeather();
+      var lngLat = marker.getLngLat(); // getting the longitude, latitude specified by the marker => the user's desired location for the event
+      var selectedWeather = getSelectedWeather(); // getting the desired weather that the user selected in the filter buttons (getSelectedWeather function in script)
 
-      // Call your JavaScript function and pass the latitude, longitude, and selected weather
+      // getting the results from the check-requirements function in app.py
       fetch('/check-requirements', {
         method: 'POST',
         headers: {
@@ -468,6 +455,7 @@ sbutton.addEventListener('click', saveToLocalStorage);
         .then(function (result) {
           // Process the result received from the backend
           updateCardColorsAndRedirect(result.result, result.locationId);
+          // changing the card color if it satisfies the requirements, and
         })
         .catch(function (error) {
           // Handle any errors that occurred during the request
