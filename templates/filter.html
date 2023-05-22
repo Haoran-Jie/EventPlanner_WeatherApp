@@ -174,7 +174,9 @@ https://stackoverflow.com/questions/42389401/html5-input-type-range-with-min-val
       font-weight: bold;
       margin-bottom: 20px;
     }
-
+    .h1 {
+       margin-bottom: 20px;
+    }
 
   </style>
 </head>
@@ -187,6 +189,7 @@ https://stackoverflow.com/questions/42389401/html5-input-type-range-with-min-val
   </div>
 
   <h1>Desired Weather</h1>
+    <p style ="font-family: Helvetica; font-weight:bold; font-size: 0.5 vw"> Choose what you'd like the weather to be like on the day of your event. </p>
   <div>
     <button class="button" data-clicked="false" data-weather-type="sun"
       onclick="showClicked(this)">
@@ -264,7 +267,7 @@ https://stackoverflow.com/questions/42389401/html5-input-type-range-with-min-val
       marker.setLngLat(e.lngLat).addTo(map);
     });
     // setLngLat: make the marker go to the longitude, langitude value that is clicked on the map
-    var weatherData = [
+    var days = [
       { date: moment().format("DD-MM") },
       { date: moment().add(1, 'days').format("DD-MM") },
       { date: moment().add(2, 'days').format("DD-MM") },
@@ -277,7 +280,7 @@ https://stackoverflow.com/questions/42389401/html5-input-type-range-with-min-val
     var weatherContainer = document.getElementById('weather-container');
 
 
-    weatherData.forEach(makeCard) // iterate through the array and make a card for each element in the array
+    days.forEach(makeCard) // iterate through the array and make a card for each element in the array
     function makeCard(data) {
       var card = document.createElement('div'); // create a new card in the div that's part of the weather card class
       card.classList.add('weather-card');
