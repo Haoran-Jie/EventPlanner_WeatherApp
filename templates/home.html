@@ -5,27 +5,126 @@
 
 <head>
 
+
+
+
     <meta charset="UTF-8">
     <title>Weather App - Cambridge</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <!--            <script src="edit_planned_events.js" async></script>-->
 
     <script>
+if (document.readyState == 'loading') {
+    document.addEventListener('DOMContentLoaded', ready)
+} else {
+    ready();
+}
 
-        var removeEvents = document.getElementsByClassName('event-button-delete');
-    for (var i = 0; i < removeEvents.length; i++) {
-        var button = removeEvents[i];
-        button.addEventListener('click', removePlannedEvent);
-        console.log("Hello");
+function initEvents(){
+console.log("FIRST LINE INIT")
+  function retrieveEvents() {
+  console.log(localStorage.getItem('Events'));
+  var itemsString = localStorage.getItem('Events');
+  if (itemsString === ""){
+  return JSON.parse('[]');
+  }
+  if (itemsString !== null) {
+    return JSON.parse(itemsString);
+  } else {
+      return JSON.parse('[]');
+
     }
+  }
 
     function removePlannedEvent(event) {
-        var buttonClicked = event.target;
-        buttonClicked.parentElement.remove();
-        console.log("Click");
+    var buttonClicked = event.target;
+      var eventRow = buttonClicked.parentElement.parentElement;
+
+      var eventName = eventRow.querySelector(".event-name").textContent;
+      var eventTime = eventRow.querySelector(".event-time").textContent;
+
+      var timeParts = eventTime.split("-");
+      var startHour = parseInt(timeParts[0].split(":")[0]);
+      var endHour = parseInt(timeParts[1].split(":")[0]);
+
+        console.log("THE VALS")
+      console.log(startHour);
+      console.log(endHour);
+      console.log(eventName);
+      var allEvents = retrieveEvents();
+
+
+      for (var i = 0; i < allEvents.length; i++){
+      console.log(allEvents[i].name)
+      console.log((allEvents[i].name === eventName))
+      console.log((allEvents[i].startTime === startHour))
+      console.log(allEvents[i].endTime === endHour)
+      if ((allEvents[i].name === eventName) && (allEvents[i].startTime === startHour) && (allEvents[i].endTime === endHour)){
+        console.log(allEvents[i])
+        console.log("FOUND IT")
+        allEvents.splice(i, i+1);
+        console.log(allEvents);
+        localStorage.setItem('Events', JSON.stringify(allEvents));
+        break;
+      }
+      }
+    buttonClicked.parentElement.parentElement.parentElement.remove();
+    if (allEvents.length === 0){
+    zeroEvents();
+    console.log("Click");}
     }
 
-    </script>
+  function zeroEvents(){
+  var eventRow = document.createElement('div');
+  var eventRowContents = `
+            <div class="event-row">
+            <span class="event-item"> No Events. Go to planning page to plan an event</span>
+            </div>`
+  eventRow.innerHTML = eventRowContents
+  eventItems.append(eventRow)
+    }
+
+
+  var allEvents = retrieveEvents();
+  console.log(allEvents)
+    var eventItems = document.getElementsByClassName('event-container')[0]
+
+  if (allEvents.length === 0){
+    zeroEvents()
+  }
+
+    var d = new Date();
+  for (var i = 0; i < allEvents.length; i++){
+    var eventRow = document.createElement('div');
+    eventRow.classList.add('event-row')
+    var eventRowContents = `
+            <div class="event-row">
+            <span class="event-item event-name">${allEvents[i].name}</span>
+            <span class="event-item event-date"> ${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}</span>
+            <span class="event-item event-time">${allEvents[i].startTime}:00-${allEvents[i].endTime}:00</span>
+            <span><button class="event-button event-button-delete" type="button">Delete</button></span>
+            </div>`
+    eventRow.innerHTML = eventRowContents
+    eventItems.append(eventRow)
+    eventRow.getElementsByClassName('event-button-delete')[0].addEventListener('click', removePlannedEvent)
+  }
+
+
+
+}
+
+function ready(){
+    console.log("READY")
+    console.log("Before Init is called")
+    initEvents();
+    console.log("INIT")
+    console.log("2");
+
+}
+
+</script>
+
+
 
 
     <style>
@@ -74,13 +173,13 @@
             opacity: 0.1;
         }
 
-        body {
+    body {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 170vh;
-            background: linear-gradient(45deg, #85FFBD, #FFFB7D, #FF85E5);
+            background: linear-gradient(45deg, #FFFFFF, #AACCFF, #DAB5F5);
             background-size: 200% 200%;
             animation: gradient 5s ease infinite;
             font-family: Arial, sans-serif;
@@ -176,7 +275,7 @@
         margin: 0 auto;
         padding: 0 1.5em;
         margin-bottom: 5em;
-        margin-top: 2em;
+
         }
         .event-item{
         display:inline-block;
@@ -215,13 +314,6 @@
         font-weight: bold;
         }
 
-        .event-button-edit{
-        color: white;
-        background-color: #56CCF2;
-        border: none;
-        border-radius: .3em;
-        font-weight: bold;
-        }
 
 
 
@@ -456,35 +548,6 @@
 
 <div>
         <section class="event-container">
-            <div class="event-row">
-            <span class="event-item event-name"> Ultimate Frisbee</span>
-            <span class="event-item event-date"> 21/05/23 </span>
-            <span class="event-item event-time"> 14:00-16:00</span>
-            <span><button class="event-button event-button-edit" type="button" >Edit</button></span>
-            <span><button class="event-button event-button-delete" type="button">Delete</button></span>
-            </div>
-
-            <div class="event-row">
-            <span class="event-item event-name"> This is an incredibly verbose and long event name</span>
-            <span class="event-item event-date"> 21/05/23 </span>
-            <span class="event-item event-time"> 14:00-16:00</span>
-            <span><button class="event-button event-button-edit" type="button" >Edit</button></span>
-            <span><button class="event-button event-button-delete" type="button">Delete</button></span>
-            </div>
-            <div class="event-row">
-            <span class="event-item event-name"> Event 3</span>
-            <span class="event-item event-date"> 21/05/23 </span>
-            <span class="event-item event-time"> 14:00-16:00</span>
-            <span><button class="event-button event-button-edit" type="button" >Edit</button></span>
-            <span><button class="event-button event-button-delete" type="button">Delete</button></span>
-            </div>
-            <div class="event-row">
-            <span class="event-item event-name"> Event 4</span>
-            <span class="event-item event-date"> 21/05/23 </span>
-            <span class="event-item event-time"> 14:00-16:00</span>
-            <span><button class="event-button event-button-edit" type="button" >Edit</button></span>
-            <span><button class="event-button event-button-delete" type="button">Delete</button></span>
-            </div>
         </section>
     </div>
 
