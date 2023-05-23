@@ -180,10 +180,8 @@ https://stackoverflow.com/questions/42389401/html5-input-type-range-with-min-val
 
 <body style="height: 200vh;">
 
-    <div>
     <h1>Name of event</h1>
     <textarea id="name-input" type="text"></textarea>
-  </div>
 
   <h1>Desired Weather</h1>
     <p style ="font-family: Helvetica; font-weight:bold; font-size: 0.5 vw"> Choose what you'd like the weather to be like on the day of your event. </p>
@@ -304,6 +302,7 @@ console.log(saveText);
 })
 
 function retrieveEvents() {
+  // Retrieves all the stored elements in JSON format.
   var itemsString = localStorage.getItem('Events');
   if (itemsString === ""){
     return JSON.parse('[]');
@@ -317,7 +316,7 @@ function retrieveEvents() {
 }
 
 const saveToLocalStorage = () => {
-  validDayz =
+  // Saves event to local storage. Saves time range as well as name.
   console.log("CLICK");
   allEvents = retrieveEvents();
   console.log("Retrieve " + allEvents);
